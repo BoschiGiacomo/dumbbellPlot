@@ -41,7 +41,7 @@ classdef DumbbellChart
             allValues = [obj.Value1, obj.Value2];
             dataRange = max(allValues) - min(allValues);
             dx = dataRange * 0.02; % data text horizontal offset
-            dy= 0.15; % vertical offset
+            dy= 0.2; % vertical offset
             for i = 1:n
                 line(axesHandle, [obj.Value1(i), obj.Value2(i)], ...
                     [Yposition(i), Yposition(i)], "Color", "k", "HandleVisibility", "off")
