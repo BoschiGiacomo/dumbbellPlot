@@ -3,7 +3,15 @@ Function to create a dumbell plot in MATLAB.
 
 Extensive [Documentation](#Documentation) of the function can be found below.
 
-Examples and output graphs can be found in the [Examples](#Section) of this document.
+Examples and output graphs can be found in the [Examples](#Examples) of this document.
+
+## Roadmap:
+The next additions to the function will be:
+- [ ] support for custom colors, marker and fontsize, linewidth
+- [ ] addition of functionSignatures.json for customized code suggestions
+- [ ] Improvement of documentation
+- [ ] Addition of a graph that creates plots for every pair of variables in a table
+- [ ] Minor Graphical enhancements to the plot
 
 # Documentation:
 ## Required Input Arguments:
