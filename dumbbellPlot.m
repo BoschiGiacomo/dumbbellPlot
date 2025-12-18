@@ -50,7 +50,7 @@ if istable(X)
             end
 
         case 2
-            if plotType ~= single
+            if plotType ~= "single"
                 error("dumbbellPlot:WrongInput", "Tables with 2 variables are only accepted if plotType is 'single'")
             end
 
@@ -256,9 +256,16 @@ if isfield(options, "YLabels")
     end
 end
 
+if isfield(options, "orientation")
+    validateattributes(options.orientation, {'string', 'char'}, {}, 'dumbbellPlot', 'orientation')
+    orientation= options.orientation;
+else
+    orientation= "horizontal";
+end
 %% main body
-switch plotType
-    case "single"
+switch strcat(plotType,"_",orientation)
+    case "single_horizontal"
+        
         ax = gca;
         chart = DumbbellChart(X1,X2,YLabels);
         [h1, h2] = chart.build(ax);
@@ -269,16 +276,49 @@ switch plotType
             title(ax, Title);
         end
 
-    case "double"
-        ax1= subplot(2,1,1);
-        ax2= subplot(2,1,2);
+    case "single_vertical"
+        ax = gca;
+        chart = DumbbellChart(X1,X2,YLabels);
+        [h1, h2] = chart.buildVertical(ax);
+        legend([h1 h2], {labelX1, labelX2}, "Location","bestoutside")
 
+        % title
+        if Title ~= ""
+            title(ax, Title);
+        end
+
+    case "double_horizontal"
+        t = tiledlayout(1, 2, 'TileSpacing', 'compact', 'Padding', 'compact');
+
+        ax1 = nexttile;
         chart = DumbbellChart(X1,X2,YLabels);
         [h1, h2] = chart.build(ax1);
         legend(ax1, [h1 h2], {labelX1, labelX2}, "Location","best")
-
+        
+        ax2= nexttile;
         chart2 = DumbbellChart(X3,X4, YLabels);
         [~, ~] = chart2.build(ax2);
+
+        title(ax1, Title{1});
+        title(ax2, Title{2});
+
+        % return value
+        ax = [ax1; ax2];
+
+    case "double_vertical"
+        t = tiledlayout(1, 2, 'TileSpacing', 'compact', 'Padding', 'compact');
+
+        ax1 = nexttile;
+        chart = DumbbellChart(X1,X2,YLabels);
+        [h1, h2] = chart.buildVertical(ax1);
+        
+        ax2 = nexttile;
+        chart2 = DumbbellChart(X3,X4, YLabels);
+        [~, ~] = chart2.buildVertical(ax2);
+        legend(ax2, [h1 h2], {labelX1, labelX2}, "Location","best")
+        ax2.YAxisLocation= "right";
+        ax2.YLabel.String= "";
+        
 
         title(ax1, Title{1});
         title(ax2, Title{2});
