@@ -27,7 +27,7 @@ classdef DumbbellChart
             % Draw method that builds the dumbbell chart in the specified
             % axes
 
-            if isempty(axesHandle) % handle the axes empty case
+            if isempty(axesHandle) 
                 axesHandle = gca;
             end
 
@@ -50,7 +50,12 @@ classdef DumbbellChart
                 text(axesHandle, obj.Value2(i)+dx, Yposition(i)-dy, num2str(obj.Value2(i)), ...
                     "HorizontalAlignment","left", "VerticalAlignment", "middle", "FontSize", 12)
             end
-
+            
+            % TO DECIDE: if it's best to keep the text below, or above the
+            % points, or maybe the first above and the second below the
+            % data points. alignment with the datapoints doesn't look
+            % convenient in case of big numbers...
+            
             h1 = scatter(axesHandle, obj.Value1, Yposition, 70, [0.85, 0.35, 0.35], "filled", "o", "MarkerEdgeColor", "k");
             h2 = scatter(axesHandle, obj.Value2, Yposition, 70, [0.25, 0.45, 0.8], "filled", "o", "MarkerEdgeColor", "k");
 
@@ -63,6 +68,49 @@ classdef DumbbellChart
             set(axesHandle, 'FontSize', 13)
 
             hold(axesHandle, 'off');
+        end
+
+        function [h1, h2]= buildVertical(obj, axesHandle)
+
+            YValue1= obj.Value1';
+            YValue2= obj.Value2';
+
+            if isempty(axesHandle) 
+                axesHandle = gca;
+            end
+
+            hold(axesHandle, 'on')
+
+            n= numel(obj.YLabels);
+            Xposition= 1:n;
+            
+            % set vertical % offset based on the data
+            allValues = [obj.Value1, obj.Value2];
+            dataRange = max(allValues) - min(allValues);
+            dy = dataRange * 0.02; 
+
+            for i = 1:n
+                line(axesHandle, [Xposition(i), Xposition(i)], [YValue1(i),YValue2(i)], ...
+                    "Color", "k", "HandleVisibility", "off")
+                text(axesHandle, Xposition(i), YValue1(i)-dy, num2str(YValue1(i)), ...
+                    "HorizontalAlignment","center", "VerticalAlignment", "top", "FontSize", 12)
+                text(axesHandle, Xposition(i), YValue2(i)+dy, num2str(YValue2(i)), ...
+                    "HorizontalAlignment","center", "VerticalAlignment", "bottom", "FontSize", 12)
+            end
+
+            h1 = scatter(axesHandle, Xposition, YValue1, 70, [0.85, 0.35, 0.35], "filled", "o", "MarkerEdgeColor", "k");
+            h2 = scatter(axesHandle, Xposition, YValue2, 70, [0.25, 0.45, 0.8], "filled", "o", "MarkerEdgeColor", "k");
+
+            xlim(axesHandle, [0.5 n+0.5])
+            ylim(axesHandle, "padded") %lerting MATLAB handle based on the data
+
+            xticks(axesHandle, Xposition)
+            xticklabels(axesHandle, obj.YLabels)
+            ylabel(axesHandle, "Values")
+
+            set(axesHandle, 'FontSize', 13)
+
+            hold(axesHandle, 'off')
         end
     end
 end
