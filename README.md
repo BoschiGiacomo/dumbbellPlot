@@ -11,7 +11,11 @@ The next additions to the function will be:
 - [ ] addition of functionSignatures.json for customized code suggestions
 - [ ] Improvement of documentation
 - [ ] Addition of a graph that creates plots for every pair of variables in a table
-- [ ] Minor Graphical enhancements to the plot
+- [ ] Option to change the color of the line depending on the distance between the points
+- [ ] Option to insert the values of the points inside of the points of the plot
+- [ ] Option to change the background of the plot to be clearer or more visually appealing
+- [ ] Option to add the differences between the points at the side of the plot
+
 
 # Documentation:
 ## Required Input Arguments:
