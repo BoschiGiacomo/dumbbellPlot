@@ -288,7 +288,7 @@ switch strcat(plotType,"_",orientation)
         end
 
     case "double_horizontal"
-        t = tiledlayout(1, 2, 'TileSpacing', 'compact', 'Padding', 'compact');
+        t = tiledlayout(2, 1, 'TileSpacing', 'compact', 'Padding', 'compact');
 
         ax1 = nexttile;
         chart = DumbbellChart(X1,X2,YLabels);
