@@ -2,7 +2,7 @@
 Function to create a dumbell plot in MATLAB.
 
 I'm developing this project as both a learning experience and an attempt to create something useful for the community.<br/>
-The idea came from my professor @MarcoRianiUNIPR, whom I thank for the inspiration.
+The idea came from my professor [@MarcoRianiUNIPR](https://github.com/MarcoRianiUNIPR), whom I thank for the inspiration.
 
 Suggestions, feedback, and contributions are welcome and encouraged.
 
