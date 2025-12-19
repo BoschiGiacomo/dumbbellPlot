@@ -19,7 +19,8 @@
             {"name":"Color", "kind":"namevalue", "type":[["numeric"], ["string"], ["char"], ["choices={'default', 'colorblind', 'ruby_jade', 'cherry_sky', 'red_blue'}"]], "purpose":"Color of the dots of the plot"},
             {"name":"MarkerSize", "kind":"namevalue", "type":[["numeric", "scalar"], ["numeric", "vector"]], "purpose":"Set size of dots of the plot"},
             {"name":"LineWidth", "kind":"namevalue", "type":["numeric", "scalar"], "purpose":"Width of the lines connecting the dots"},
-            {"name":"Fontsize", "kind":"namevalue", "type":["numeric", "scalar"], "purpose":"Font size of descriptive text next to datapoints"}
+            {"name":"Fontsize", "kind":"namevalue", "type":["numeric", "scalar"], "purpose":"Font size of descriptive text next to datapoints"},
+            {"name":"TextInside", "kind":"namevalue", "type":["logical", "scalar"], "purpose":"Display text inside the dots"}
         ],
 
         "description":"Plots the Dumbbell Chart of the provided data."
@@ -42,7 +43,8 @@
             {"name":"Color", "kind":"namevalue", "type":[["numeric"], ["string"], ["char"], ["choices={'default', 'colorblind', 'ruby_jade', 'cherry_sky', 'red_blue'}"]], "purpose":"Color of the dots of the plot"},
             {"name":"MarkerSize", "kind":"namevalue", "type":[["numeric", "scalar"], ["numeric", "vector"]], "purpose":"Set size of dots of the plot"},
             {"name":"LineWidth", "kind":"namevalue", "type":["numeric", "scalar"], "purpose":"Width of the lines connecting the dots"},
-            {"name":"Fontsize", "kind":"namevalue", "type":["numeric", "scalar"], "purpose":"Font size of descriptive text next to datapoints"}
+            {"name":"Fontsize", "kind":"namevalue", "type":["numeric", "scalar"], "purpose":"Font size of descriptive text next to datapoints"},
+            {"name":"TextInside", "kind":"namevalue", "type":["logical", "scalar"], "purpose":"Display text inside the dots"}
         ],
 
         "description":"Plots the Dumbbell Chart of the provided data."

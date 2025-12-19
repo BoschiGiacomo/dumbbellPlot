@@ -289,10 +289,10 @@ if isfield(options, "MarkerSize")
         sz= options.MarkerSize;
     else
         warning("dumbbellPlot:InvalidMarkerSize", "Invalid Marker size provided, using default")
-        sz= 70;
+        sz= 70.1;
     end
 else
-    sz= 70; % set default
+    sz= 70.1; % set default
 end
 
 if isfield(options, "LineWidth")
@@ -311,17 +311,28 @@ if isfield(options, "Fontsize")
         Fontsize= options.Fontsize;
     else
         warning("dumbbellPlot:InvalidFontSize", "Invalid Font size provided, using default")
-        Fontsize= 12;
+        Fontsize= 12.1;
     end
 else
-    Fontsize= 12; %default
+    Fontsize= 12.1; %default
+end
+
+if isfield(options, "TextInside")
+    if islogical(options.TextInside)
+        TextInside= options.TextInside;
+    else
+        warning("dumbbellPlot:InvalidTextInside", "Text Inside needs to be a logical (true or false) value!")
+        TextInside= false;
+    end
+else
+    TextInside= false;
 end
 %% main body
 switch strcat(plotType,"_",orientation)
     case "single_horizontal"
         
         ax = gca;
-        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,Fontsize);
+        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,Fontsize,TextInside);
         [h1, h2] = chart.build(ax);
         legend([h1 h2], {labelX1, labelX2}, "Location","bestoutside")
 
@@ -332,7 +343,7 @@ switch strcat(plotType,"_",orientation)
 
     case "single_vertical"
         ax = gca;
-        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,Fontsize);
+        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,Fontsize,TextInside);
         [h1, h2] = chart.buildVertical(ax);
         legend([h1 h2], {labelX1, labelX2}, "Location","bestoutside")
 
@@ -345,12 +356,12 @@ switch strcat(plotType,"_",orientation)
         t = tiledlayout(2, 1, 'TileSpacing', 'compact', 'Padding', 'compact');
 
         ax1 = nexttile;
-        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,Fontsize);
+        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,Fontsize,TextInside);
         [h1, h2] = chart.build(ax1);
         legend(ax1, [h1 h2], {labelX1, labelX2}, "Location","best")
         
         ax2= nexttile;
-        chart2 = DumbbellChart(X3,X4, YLabels,colors,sz,LineWidth,Fontsize);
+        chart2 = DumbbellChart(X3,X4, YLabels,colors,sz,LineWidth,Fontsize,TextInside);
         [~, ~] = chart2.build(ax2);
 
         title(ax1, Title{1});
@@ -363,17 +374,16 @@ switch strcat(plotType,"_",orientation)
         t = tiledlayout(1, 2, 'TileSpacing', 'compact', 'Padding', 'compact');
 
         ax1 = nexttile;
-        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,Fontsize);
+        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,Fontsize,TextInside);
         [h1, h2] = chart.buildVertical(ax1);
         
         ax2 = nexttile;
-        chart2 = DumbbellChart(X3,X4, YLabels,colors,sz,LineWidth,Fontsize);
+        chart2 = DumbbellChart(X3,X4, YLabels,colors,sz,LineWidth,Fontsize,TextInside);
         [~, ~] = chart2.buildVertical(ax2);
         legend(ax2, [h1 h2], {labelX1, labelX2}, "Location","best")
         ax2.YAxisLocation= "right";
         ax2.YLabel.String= "";
         
-
         title(ax1, Title{1});
         title(ax2, Title{2});
 

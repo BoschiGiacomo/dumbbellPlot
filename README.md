@@ -1,5 +1,10 @@
-# dumbbellPlot
+# Dumbbell Charts for MATLAB
 Function to create a dumbell plot in MATLAB.
+
+I'm developing this project as both a learning experience and an attempt to create something useful for the community.<br/>
+The idea came from my professor @MarcoRianiUNIPR, whom I thank for the inspiration.
+
+Suggestions, feedback, and contributions are welcome and encouraged.
 
 Extensive [Documentation](#Documentation) of the function can be found below.
 
@@ -9,12 +14,12 @@ Examples and output graphs can be found in the [Examples](#Examples) of this doc
 Recently added featurs:
 - [x] support for custom colors, marker and fontsize, linewidth
 - [x] addition of functionSignatures.json for customized code suggestions
+- [x] Option to insert the values of the points inside of the points of the plot
 
 The next additions to the function will be:
 - [ ] Improvement of documentation
 - [ ] Addition of a graph that creates plots for every pair of variables in a table
 - [ ] Option to change the color of the line depending on the distance between the points
-- [ ] Option to insert the values of the points inside of the points of the plot
 - [ ] Option to change the background of the plot to be clearer or more visually appealing
 - [ ] Option to add the differences between the points at the side of the plot
 
@@ -89,6 +94,10 @@ The next additions to the function will be:
 **Fontsize**
 - Type: numeric scalar
 - Purpose: Font size of descriptive text next to datapoints
+
+**TextInside**
+- Type: logical
+- Purpose: Text inside or outside (default) of the data points
 
 ## Output
 **ax:**
@@ -177,3 +186,18 @@ dumbbellPlot(before_campaign, after_campaign, ...
 ```
 
 ![Example 4 output](images/Example4.png)
+
+## Text inside dots
+```
+%% Example 5: Text inside dots
+products = {'Product A', 'Product B', 'Product C', 'Product D', 'Product E'};
+before_campaign = [65, 45, 78, 52, 88];
+after_campaign = [82, 68, 95, 71, 92];
+
+figure;
+dumbbellPlot(before_campaign, after_campaign, 'labelX1', 'Pre-Campaign', ...
+    'labelX2', 'Post-Campaign', 'Title', 'Marketing Campaign', ...
+    'YLabels', products, 'TextInside', true);
+```
+
+![Example 5 output](images/Example5.png)

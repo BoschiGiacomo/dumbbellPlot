@@ -11,10 +11,11 @@ classdef DumbbellChart
         size (1,:) double
         LineWidth (1,1) double
         Fontsize (1,1) double
+        TextInside (1,1) logical
     end
 
     methods
-        function obj = DumbbellChart(x1, x2, YLabels, colors, size, LineWidth, Fontsize)
+        function obj = DumbbellChart(x1, x2, YLabels, colors, size, LineWidth, Fontsize, TextInside)
             % Object constructor method
             % Required inputs: x1 and x2, which are the 2 sets of data
             % confronted
@@ -29,6 +30,7 @@ classdef DumbbellChart
             obj.size = size;
             obj.LineWidth = LineWidth;
             obj.Fontsize = Fontsize;
+            obj.TextInside = TextInside;
         end
 
         function [h1, h2] = build(obj, axesHandle)
@@ -53,10 +55,36 @@ classdef DumbbellChart
             for i = 1:n
                 line(axesHandle, [obj.Value1(i), obj.Value2(i)], ...
                     [Yposition(i), Yposition(i)], "Color", "k", "HandleVisibility", "off", "LineWidth", obj.LineWidth)
-                text(axesHandle, obj.Value1(i)-dx, Yposition(i)-dy, num2str(obj.Value1(i)), ...
-                    "HorizontalAlignment","right", "VerticalAlignment", "middle", "FontSize", obj.Fontsize)
-                text(axesHandle, obj.Value2(i)+dx, Yposition(i)-dy, num2str(obj.Value2(i)), ...
-                    "HorizontalAlignment","left", "VerticalAlignment", "middle", "FontSize", obj.Fontsize)
+            end
+
+            switch obj.TextInside
+                case false
+                    for i = 1:n
+                        text(axesHandle, obj.Value1(i)-dx, Yposition(i)-dy, num2str(obj.Value1(i)), ...
+                            "HorizontalAlignment","right", "VerticalAlignment", "middle", "FontSize", obj.Fontsize)
+                        text(axesHandle, obj.Value2(i)+dx, Yposition(i)-dy, num2str(obj.Value2(i)), ...
+                            "HorizontalAlignment","left", "VerticalAlignment", "middle", "FontSize", obj.Fontsize)
+                    end
+
+                    h1 = scatter(axesHandle, obj.Value1, Yposition, obj.size, obj.colors(1, 1:3), "filled", "o", "MarkerEdgeColor", "k");
+                    h2 = scatter(axesHandle, obj.Value2, Yposition, obj.size, obj.colors(2, 1:3), "filled", "o", "MarkerEdgeColor", "k");
+                case true
+                    if obj.size == 70.1
+                        obj.size = 400; %overwrite default value
+                    end
+
+                    h1 = scatter(axesHandle, obj.Value1, Yposition, obj.size, obj.colors(1, 1:3), "filled", "o", "MarkerEdgeColor", obj.colors(2,1:3));
+                    h2 = scatter(axesHandle, obj.Value2, Yposition, obj.size, obj.colors(2, 1:3), "filled", "o", "MarkerEdgeColor", obj.colors(1,1:3));
+
+                    for i = 1:n
+                        text(axesHandle, obj.Value1(i), Yposition(i), num2str(obj.Value1(i)), ...
+                            "HorizontalAlignment","center", "VerticalAlignment", "middle", "FontSize", obj.Fontsize, ...
+                            "Color", obj.colors(2, 1:3))
+                        text(axesHandle, obj.Value2(i), Yposition(i), num2str(obj.Value2(i)), ...
+                            "HorizontalAlignment","center", "VerticalAlignment", "middle", "FontSize", obj.Fontsize, ...
+                            "Color", obj.colors(1, 1:3))
+                    end
+
             end
             
             % TO DECIDE: if it's best to keep the text below, or above the
@@ -64,8 +92,6 @@ classdef DumbbellChart
             % data points. alignment with the datapoints doesn't look
             % convenient in case of big numbers...
             
-            h1 = scatter(axesHandle, obj.Value1, Yposition, obj.size, obj.colors(1, 1:3), "filled", "o", "MarkerEdgeColor", "k");
-            h2 = scatter(axesHandle, obj.Value2, Yposition, obj.size, obj.colors(2, 1:3), "filled", "o", "MarkerEdgeColor", "k");
 
             ylim(axesHandle, [0.5 n+0.5])
             xlim(axesHandle, "padded")
@@ -100,14 +126,37 @@ classdef DumbbellChart
             for i = 1:n
                 line(axesHandle, [Xposition(i), Xposition(i)], [YValue1(i),YValue2(i)], ...
                     "Color", "k", "HandleVisibility", "off", "LineWidth", obj.LineWidth)
-                text(axesHandle, Xposition(i), YValue1(i)-dy, num2str(YValue1(i)), ...
-                    "HorizontalAlignment","center", "VerticalAlignment", "top", "FontSize", obj.Fontsize)
-                text(axesHandle, Xposition(i), YValue2(i)+dy, num2str(YValue2(i)), ...
-                    "HorizontalAlignment","center", "VerticalAlignment", "bottom", "FontSize", obj.Fontsize)
             end
 
-            h1 = scatter(axesHandle, Xposition, YValue1, obj.size, obj.colors(1, 1:3), "filled", "o", "MarkerEdgeColor", "k");
-            h2 = scatter(axesHandle, Xposition, YValue2, obj.size, obj.colors(2, 1:3), "filled", "o", "MarkerEdgeColor", "k");
+            switch obj.TextInside
+                case false
+                    for i = 1:n
+                        text(axesHandle, Xposition(i), YValue1(i)-dy, num2str(YValue1(i)), ...
+                            "HorizontalAlignment","center", "VerticalAlignment", "top", "FontSize", obj.Fontsize)
+                        text(axesHandle, Xposition(i), YValue2(i)+dy, num2str(YValue2(i)), ...
+                            "HorizontalAlignment","center", "VerticalAlignment", "bottom", "FontSize", obj.Fontsize)
+                    end
+
+                    h1 = scatter(axesHandle, Xposition, YValue1, obj.size, obj.colors(1, 1:3), "filled", "o", "MarkerEdgeColor", "k");
+                    h2 = scatter(axesHandle, Xposition, YValue2, obj.size, obj.colors(2, 1:3), "filled", "o", "MarkerEdgeColor", "k");
+                case true
+                    if obj.size == 70.1
+                        obj.size = 400; %overwrite default value
+                    end
+
+                    h1 = scatter(axesHandle, Xposition, YValue1, obj.size, obj.colors(1, 1:3), "filled", "o", "MarkerEdgeColor", obj.colors(2,1:3));
+                    h2 = scatter(axesHandle, Xposition, YValue2, obj.size, obj.colors(2, 1:3), "filled", "o", "MarkerEdgeColor", obj.colors(1,1:3));
+
+                    for i= 1:n
+                        text(axesHandle, Xposition(i), YValue1(i), num2str(YValue1(i)), ...
+                            "HorizontalAlignment","center", "VerticalAlignment", "middle", "FontSize", obj.Fontsize, ...
+                            "Color", obj.colors(2,1:3))
+                        text(axesHandle, Xposition(i), YValue2(i), num2str(YValue2(i)), ...
+                            "HorizontalAlignment","center", "VerticalAlignment", "middle", "FontSize", obj.Fontsize, ...
+                            "Color", obj.colors(1,1:3))
+                    end
+
+            end
 
             xlim(axesHandle, [0.5 n+0.5])
             ylim(axesHandle, "padded") %lerting MATLAB handle based on the data
