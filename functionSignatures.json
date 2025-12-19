@@ -15,10 +15,14 @@
             {"name":"LabelX1", "kind":"namevalue", "type":[["string"], ["char"]], "purpose":"Legend label for the first set of data"},
             {"name":"LabelX2", "kind":"namevalue", "type":[["string"], ["char"]], "purpose":"Legend label for the second set of data"},
             {"name":"Title", "kind":"namevalue", "type":[["string"], ["char"], ["cell"]], "purpose":"Titles for each plot"},
-            {"name":"YLabels", "kind":"namevalue", "type":[["string"], ["char"], ["cell"]], "purpose":"Tick labels for the data points"}
+            {"name":"YLabels", "kind":"namevalue", "type":[["string"], ["char"], ["cell"]], "purpose":"Tick labels for the data points"},
+            {"name":"Color", "kind":"namevalue", "type":[["numeric"], ["string"], ["char"], ["choices={'default', 'colorblind', 'ruby_jade', 'cherry_sky', 'red_blue'}"]], "purpose":"Color of the dots of the plot"},
+            {"name":"MarkerSize", "kind":"namevalue", "type":[["numeric", "scalar"], ["numeric", "vector"]], "purpose":"Set size of dots of the plot"},
+            {"name":"LineWidth", "kind":"namevalue", "type":["numeric", "scalar"], "purpose":"Width of the lines connecting the dots"},
+            {"name":"Fontsize", "kind":"namevalue", "type":["numeric", "scalar"], "purpose":"Font size of descriptive text next to datapoints"}
         ],
 
-        "description":"Plots the Dumbbell Chart of the provided data. Table input"
+        "description":"Plots the Dumbbell Chart of the provided data."
     },
 
     "dumbbellPlot":
@@ -34,7 +38,13 @@
             {"name":"LabelX1", "kind":"namevalue", "type":[["string"], ["char"]], "purpose":"Legend label for the first set of data"},
             {"name":"LabelX2", "kind":"namevalue", "type":[["string"], ["char"]], "purpose":"Legend label for the second set of data"},
             {"name":"Title", "kind":"namevalue", "type":[["string"], ["char"], ["cell"]], "purpose":"Titles for each plot"},
-            {"name":"YLabels", "kind":"namevalue", "type":[["string"], ["char"], ["cell"]], "purpose":"Tick labels for the data points"}
-        ]
+            {"name":"YLabels", "kind":"namevalue", "type":[["string"], ["char"], ["cell"]], "purpose":"Tick labels for the data points"},
+            {"name":"Color", "kind":"namevalue", "type":[["numeric"], ["string"], ["char"], ["choices={'default', 'colorblind', 'ruby_jade', 'cherry_sky', 'red_blue'}"]], "purpose":"Color of the dots of the plot"},
+            {"name":"MarkerSize", "kind":"namevalue", "type":[["numeric", "scalar"], ["numeric", "vector"]], "purpose":"Set size of dots of the plot"},
+            {"name":"LineWidth", "kind":"namevalue", "type":["numeric", "scalar"], "purpose":"Width of the lines connecting the dots"},
+            {"name":"Fontsize", "kind":"namevalue", "type":["numeric", "scalar"], "purpose":"Font size of descriptive text next to datapoints"}
+        ],
+
+        "description":"Plots the Dumbbell Chart of the provided data."
     }
 }

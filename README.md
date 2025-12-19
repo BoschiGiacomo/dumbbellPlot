@@ -6,9 +6,11 @@ Extensive [Documentation](#Documentation) of the function can be found below.
 Examples and output graphs can be found in the [Examples](#Examples) of this document.
 
 ## Roadmap:
+Recently added featurs:
+- [x] support for custom colors, marker and fontsize, linewidth
+- [x] addition of functionSignatures.json for customized code suggestions
+
 The next additions to the function will be:
-- [ ] support for custom colors, marker and fontsize, linewidth
-- [ ] addition of functionSignatures.json for customized code suggestions
 - [ ] Improvement of documentation
 - [ ] Addition of a graph that creates plots for every pair of variables in a table
 - [ ] Option to change the color of the line depending on the distance between the points
@@ -71,6 +73,23 @@ The next additions to the function will be:
 - Type: string or char oR cell array
 - Purpose: Custom labels for tick labels, Must match length of input Data. If missing, default will be used ("Row 1", "Row 2", ...)
 
+**Color**
+- Type: string, or char or rgb triplet
+- Accepted built-in palettes: "default", "colorblind", "ruby_jade", "cherry_sky", "red_blue"
+- Purpose: Color of the dots of the plot
+
+**MarkerSize**
+- Type numeric scalar or numeric vector
+- Purpose: Set size of dots
+
+**LineWidth**
+- Type: numeric scalar
+- Purpose: width of the lines connecting the dots
+
+**Fontsize**
+- Type: numeric scalar
+- Purpose: Font size of descriptive text next to datapoints
+
 ## Output
 **ax:**
 - Type: axes handles or array of axes handles
@@ -89,8 +108,8 @@ figure;
 dumbbellPlot(scoreBefore, scoreAfter, 'labelX1', 'Before Training', 'labelX2', 'After Training', ...
    'Title', 'Employee Performance Improvement', 'YLabels', employees);
 ```
-<img width="1916" height="1255" alt="singlePlot" src="https://github.com/user-attachments/assets/38e0c953-d649-418f-b1e8-2d80f851280c" />
 
+![Example 1 output](images/Example1.png)
 ## Double Vertical plot
 ```
 %% Example double vertical plot
@@ -111,7 +130,7 @@ dumbbellPlot(jan_morning, jan_evening, jun_morning, jun_evening, ...
     'labelX2', 'Evening','Title', {'January BP', 'June BP'},'YLabels', patients);
 ```
 
-<img width="1916" height="1255" alt="doubleVertical" src="https://github.com/user-attachments/assets/6ba558a7-59f8-420d-aef0-1bb710300300" />
+![Example 2 output](images/example2.png)
 
 ## double horizontal plot
 ```
@@ -137,4 +156,24 @@ dumbbellPlot(tradeData,'Q1_Imports', 'Q1_Exports', 'Q3_Imports', 'Q3_Exports', .
     'Exports','Title', {'Q1 Trade Balance', 'Q3 Trade Balance'});
 ```
 
-<img width="1916" height="1255" alt="doubleHor" src="https://github.com/user-attachments/assets/3739193f-6614-480a-ba1b-ab31c5c84078" />
+![Example 3 output](images/Example3.png)
+## Dot size based on weight
+```
+%% Example 4: Size of dots based on weights
+products = {'Product A', 'Product B', 'Product C', 'Product D', 'Product E'};
+before_campaign = [65, 45, 78, 52, 88];
+after_campaign = [82, 68, 95, 71, 92];
+
+% Marker sizes based on revenue importance (arbitrary weights)
+importance = [100, 75, 150, 90, 130];
+
+figure;
+dumbbellPlot(before_campaign, after_campaign, ...
+    'MarkerSize', importance, ...        % Different sizes show importance           
+    'labelX1', 'Pre-Campaign', ...
+    'labelX2', 'Post-Campaign', ...
+    'Title', 'Marketing Campaign Impact (marker size = revenue weight)', ...
+    'YLabels', products);
+```
+
+![Example 4 output](images/Example4.png)

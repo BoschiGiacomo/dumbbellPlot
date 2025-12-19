@@ -7,10 +7,14 @@ classdef DumbbellChart
         Value1 (1,:) double
         Value2 (1,:) double
         YLabels (1,:) cell
+        colors (2,3) double
+        size (1,:) double
+        LineWidth (1,1) double
+        Fontsize (1,1) double
     end
 
     methods
-        function obj = DumbbellChart(x1, x2, YLabels)
+        function obj = DumbbellChart(x1, x2, YLabels, colors, size, LineWidth, Fontsize)
             % Object constructor method
             % Required inputs: x1 and x2, which are the 2 sets of data
             % confronted
@@ -21,6 +25,10 @@ classdef DumbbellChart
             obj.Value1 = x1;
             obj.Value2 = x2;
             obj.YLabels = YLabels;
+            obj.colors = colors;
+            obj.size = size;
+            obj.LineWidth = LineWidth;
+            obj.Fontsize = Fontsize;
         end
 
         function [h1, h2] = build(obj, axesHandle)
@@ -44,11 +52,11 @@ classdef DumbbellChart
             dy= 0.2; % vertical offset
             for i = 1:n
                 line(axesHandle, [obj.Value1(i), obj.Value2(i)], ...
-                    [Yposition(i), Yposition(i)], "Color", "k", "HandleVisibility", "off")
+                    [Yposition(i), Yposition(i)], "Color", "k", "HandleVisibility", "off", "LineWidth", obj.LineWidth)
                 text(axesHandle, obj.Value1(i)-dx, Yposition(i)-dy, num2str(obj.Value1(i)), ...
-                    "HorizontalAlignment","right", "VerticalAlignment", "middle", "FontSize", 12)
+                    "HorizontalAlignment","right", "VerticalAlignment", "middle", "FontSize", obj.Fontsize)
                 text(axesHandle, obj.Value2(i)+dx, Yposition(i)-dy, num2str(obj.Value2(i)), ...
-                    "HorizontalAlignment","left", "VerticalAlignment", "middle", "FontSize", 12)
+                    "HorizontalAlignment","left", "VerticalAlignment", "middle", "FontSize", obj.Fontsize)
             end
             
             % TO DECIDE: if it's best to keep the text below, or above the
@@ -56,8 +64,8 @@ classdef DumbbellChart
             % data points. alignment with the datapoints doesn't look
             % convenient in case of big numbers...
             
-            h1 = scatter(axesHandle, obj.Value1, Yposition, 70, [0.85, 0.35, 0.35], "filled", "o", "MarkerEdgeColor", "k");
-            h2 = scatter(axesHandle, obj.Value2, Yposition, 70, [0.25, 0.45, 0.8], "filled", "o", "MarkerEdgeColor", "k");
+            h1 = scatter(axesHandle, obj.Value1, Yposition, obj.size, obj.colors(1, 1:3), "filled", "o", "MarkerEdgeColor", "k");
+            h2 = scatter(axesHandle, obj.Value2, Yposition, obj.size, obj.colors(2, 1:3), "filled", "o", "MarkerEdgeColor", "k");
 
             ylim(axesHandle, [0.5 n+0.5])
             xlim(axesHandle, "padded")
@@ -91,15 +99,15 @@ classdef DumbbellChart
 
             for i = 1:n
                 line(axesHandle, [Xposition(i), Xposition(i)], [YValue1(i),YValue2(i)], ...
-                    "Color", "k", "HandleVisibility", "off")
+                    "Color", "k", "HandleVisibility", "off", "LineWidth", obj.LineWidth)
                 text(axesHandle, Xposition(i), YValue1(i)-dy, num2str(YValue1(i)), ...
-                    "HorizontalAlignment","center", "VerticalAlignment", "top", "FontSize", 12)
+                    "HorizontalAlignment","center", "VerticalAlignment", "top", "FontSize", obj.Fontsize)
                 text(axesHandle, Xposition(i), YValue2(i)+dy, num2str(YValue2(i)), ...
-                    "HorizontalAlignment","center", "VerticalAlignment", "bottom", "FontSize", 12)
+                    "HorizontalAlignment","center", "VerticalAlignment", "bottom", "FontSize", obj.Fontsize)
             end
 
-            h1 = scatter(axesHandle, Xposition, YValue1, 70, [0.85, 0.35, 0.35], "filled", "o", "MarkerEdgeColor", "k");
-            h2 = scatter(axesHandle, Xposition, YValue2, 70, [0.25, 0.45, 0.8], "filled", "o", "MarkerEdgeColor", "k");
+            h1 = scatter(axesHandle, Xposition, YValue1, obj.size, obj.colors(1, 1:3), "filled", "o", "MarkerEdgeColor", "k");
+            h2 = scatter(axesHandle, Xposition, YValue2, obj.size, obj.colors(2, 1:3), "filled", "o", "MarkerEdgeColor", "k");
 
             xlim(axesHandle, [0.5 n+0.5])
             ylim(axesHandle, "padded") %lerting MATLAB handle based on the data

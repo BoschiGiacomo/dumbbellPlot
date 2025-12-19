@@ -1,4 +1,4 @@
-%% single plot example
+%% Example 1: single plot example
 % Employee performance scores before and after training program
 employees = {'Alice', 'Bob', 'Charlie', 'Diana', 'Ethan'};
 scoreBefore = [72, 65, 78, 81, 69];
@@ -8,7 +8,7 @@ figure;
 dumbbellPlot(scoreBefore, scoreAfter, 'labelX1', 'Before Training', 'labelX2', 'After Training', ...
    'Title', 'Employee Performance Improvement', 'YLabels', employees);
 
-%% Example double vertical plot
+%% Example 2: double vertical plot
 % Patient health metrics: systolic BP comparison across two time periods
 patients = {'Patient A', 'Patient B', 'Patient C', 'Patient D'};
 
@@ -24,7 +24,7 @@ figure;
 dumbbellPlot(jan_morning, jan_evening, jun_morning, jun_evening, ...
     'plotType', 'double','orientation', 'vertical','labelX1', 'Morning', ...
     'labelX2', 'Evening','Title', {'January BP', 'June BP'},'YLabels', patients);
-%% double horizontal plot
+%% Example 3: double horizontal plot
 % Quarterly trade data for 6 countries (in billions USD)
 countries = {'USA', 'China', 'Germany', 'Japan', 'UK', 'India'};
 
@@ -44,3 +44,18 @@ figure;
 dumbbellPlot(tradeData,'Q1_Imports', 'Q1_Exports', 'Q3_Imports', 'Q3_Exports', ...
     'plotType','double','orientation','horizontal', 'labelX1', 'Imports','labelX2', ...
     'Exports','Title', {'Q1 Trade Balance', 'Q3 Trade Balance'});
+%% Example 4: Size of dots based on weights
+products = {'Product A', 'Product B', 'Product C', 'Product D', 'Product E'};
+before_campaign = [65, 45, 78, 52, 88];
+after_campaign = [82, 68, 95, 71, 92];
+
+% Marker sizes based on revenue importance (arbitrary weights)
+importance = [100, 75, 150, 90, 130];
+
+figure;
+dumbbellPlot(before_campaign, after_campaign, ...
+    'MarkerSize', importance, ...        % Different sizes show importance           
+    'labelX1', 'Pre-Campaign', ...
+    'labelX2', 'Post-Campaign', ...
+    'Title', 'Marketing Campaign Impact (marker size = revenue weight)', ...
+    'YLabels', products);

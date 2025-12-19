@@ -262,12 +262,66 @@ if isfield(options, "orientation")
 else
     orientation= "horizontal";
 end
+
+if isfield(options, "Color")
+    if (ischar(options.Color) && isrow(options.Color)) || (isstring(options.Color) && isscalar(options.Color))
+        colors = getColorPalette(options.Color);
+    else
+        try
+            colors = validatecolor(options.Color, "multiple");
+            if size(colors, 1) ~= 2
+                warning("dumbbellPlot:InvalidColor", "Color must provide exactly 2 valid colors, default palette will be used")
+                colors = getColorPalette("default");
+            end
+        catch ME
+            warning("dumbbellPlot:InvalidColor", "Invalid Color, default palette will be used")
+            colors = getColorPalette("default");
+        end
+    end
+else
+    colors = getColorPalette("default");
+end
+
+if isfield(options, "MarkerSize")
+    if isnumeric(options.MarkerSize) && isscalar(options.MarkerSize)
+        sz= options.MarkerSize;
+    elseif isnumeric(options.MarkerSize) && length(options.MarkerSize) == length(X1)
+        sz= options.MarkerSize;
+    else
+        warning("dumbbellPlot:InvalidMarkerSize", "Invalid Marker size provided, using default")
+        sz= 70;
+    end
+else
+    sz= 70; % set default
+end
+
+if isfield(options, "LineWidth")
+    if isnumeric(options.LineWidth) && isscalar(options.LineWidth)
+        LineWidth= options.LineWidth;
+    else
+        warning("dumbbellPlot:InvalidLineWidth", "Invalid Line Width provided, using default")
+        LineWidth= 1.2;
+    end
+else
+    LineWidth= 1.2; % setdefault
+end
+
+if isfield(options, "Fontsize")
+    if isnumeric(options.Fontsize) && isscalar(options.Fontsize)
+        Fontsize= options.Fontsize;
+    else
+        warning("dumbbellPlot:InvalidFontSize", "Invalid Font size provided, using default")
+        Fontsize= 12;
+    end
+else
+    Fontsize= 12; %default
+end
 %% main body
 switch strcat(plotType,"_",orientation)
     case "single_horizontal"
         
         ax = gca;
-        chart = DumbbellChart(X1,X2,YLabels);
+        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,Fontsize);
         [h1, h2] = chart.build(ax);
         legend([h1 h2], {labelX1, labelX2}, "Location","bestoutside")
 
@@ -278,7 +332,7 @@ switch strcat(plotType,"_",orientation)
 
     case "single_vertical"
         ax = gca;
-        chart = DumbbellChart(X1,X2,YLabels);
+        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,Fontsize);
         [h1, h2] = chart.buildVertical(ax);
         legend([h1 h2], {labelX1, labelX2}, "Location","bestoutside")
 
@@ -291,12 +345,12 @@ switch strcat(plotType,"_",orientation)
         t = tiledlayout(2, 1, 'TileSpacing', 'compact', 'Padding', 'compact');
 
         ax1 = nexttile;
-        chart = DumbbellChart(X1,X2,YLabels);
+        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,Fontsize);
         [h1, h2] = chart.build(ax1);
         legend(ax1, [h1 h2], {labelX1, labelX2}, "Location","best")
         
         ax2= nexttile;
-        chart2 = DumbbellChart(X3,X4, YLabels);
+        chart2 = DumbbellChart(X3,X4, YLabels,colors,sz,LineWidth,Fontsize);
         [~, ~] = chart2.build(ax2);
 
         title(ax1, Title{1});
@@ -309,11 +363,11 @@ switch strcat(plotType,"_",orientation)
         t = tiledlayout(1, 2, 'TileSpacing', 'compact', 'Padding', 'compact');
 
         ax1 = nexttile;
-        chart = DumbbellChart(X1,X2,YLabels);
+        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,Fontsize);
         [h1, h2] = chart.buildVertical(ax1);
         
         ax2 = nexttile;
-        chart2 = DumbbellChart(X3,X4, YLabels);
+        chart2 = DumbbellChart(X3,X4, YLabels,colors,sz,LineWidth,Fontsize);
         [~, ~] = chart2.buildVertical(ax2);
         legend(ax2, [h1 h2], {labelX1, labelX2}, "Location","best")
         ax2.YAxisLocation= "right";
@@ -326,4 +380,29 @@ switch strcat(plotType,"_",orientation)
         % return value
         ax = [ax1; ax2];
 end
+    
+%% helper function to support pre-made color palettes
+    function colors = getColorPalette(paletteName)
+        switch paletteName
+            case "default"
+                colors = [0.92, 0.78, 0.38; % Sand yellow
+                    0.17, 0.44, 0.26]; %Forest green
+            case "colorblind"
+                colors = [0.90, 0.62, 0.00; % Amber orange
+                    0.00, 0.45, 0.70]; % Ocean blue
+            case "ruby_jade"
+                colors = [0.78, 0.15, 0.28; % Ruby red
+                    0.25, 0.60, 0.50]; % Jade green
+            case "cherry_sky"
+                colors = [0.85, 0.25, 0.38; % Cherry red
+                    0.52, 0.75, 0.92]; % Sky blue
+            case "red_blue"
+                colors = [0.88, 0.30, 0.30; % Coral Red
+                    0.20, 0.42, 0.85]; % Royal blue
+            otherwise
+                warning("dumbbellPlot:UnknownPalette", ...
+                    "Unknown palette '%s', using default", paletteName);
+                colors = [0.92, 0.78, 0.38; 0.17, 0.44, 0.26];
+        end
+    end
 end
