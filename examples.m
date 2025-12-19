@@ -59,3 +59,33 @@ dumbbellPlot(before_campaign, after_campaign, ...
     'labelX2', 'Post-Campaign', ...
     'Title', 'Marketing Campaign Impact (marker size = revenue weight)', ...
     'YLabels', products);
+%% Example 5: Text inside dots
+products = {'Product A', 'Product B', 'Product C', 'Product D', 'Product E'};
+before_campaign = [65, 45, 78, 52, 88];
+after_campaign = [82, 68, 95, 71, 92];
+
+figure;
+dumbbellPlot(before_campaign, after_campaign, 'labelX1', 'Pre-Campaign', ...
+    'labelX2', 'Post-Campaign', 'Title', 'Marketing Campaign', ...
+    'YLabels', products, 'TextInside', true);
+
+%% Example 6: Directional vs Robust Color Scaling with Outlier
+% Demonstrates the difference between standard and robust scaling methods
+
+% Sample data with outlier
+products = {'Product A', 'Product B', 'Product C', 'Product D', 'Product E', 'Product F'};
+Q1_sales = [120, 135, 128, 145, 130, 130];
+Q2_sales = [135, 145, 138, 155, 250, 135]; % Q2 contains an outlier!!! 
+
+figure;
+
+subplot(2, 1, 1);
+dumbbellPlot(Q1_sales, Q2_sales,'YLabels', products,'labelX1', 'Q1','labelX2', 'Q2', ...
+    'Title', 'Directional Scaling','ColorDist', 'directional','LineWidth', 3);
+
+subplot(2, 1, 2);
+dumbbellPlot(Q1_sales, Q2_sales, 'YLabels', products, 'labelX1', 'Q1', ...
+    'labelX2', 'Q2','Title', 'Robust Scaling','ColorDist', 'robust', 'LineWidth', 3);
+
+% Add overall title
+sgtitle('Comparison of Color Scaling Methods')
