@@ -1,5 +1,6 @@
-#test m files
+#test m files and folder
 test*.m
+test/
 
 # MATLAB
 # Autosave files

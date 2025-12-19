@@ -11,15 +11,16 @@ Extensive [Documentation](#Documentation) of the function can be found below.
 Examples and output graphs can be found in the [Examples](#Examples) of this document.
 
 ## Roadmap:
-Recently added featurs:
-- [x] support for custom colors, marker and fontsize, linewidth
+Recently added features:
+- [x] support for custom colors, markersize, axesfontsize, linewidth, Textsize
 - [x] addition of functionSignatures.json for customized code suggestions
 - [x] Option to insert the values of the points inside of the points of the plot
+- [x] Option to change the color of the line depending on the distance between the points
 
 The next additions to the function will be:
 - [ ] Improvement of documentation
+- [ ] restructuring of the repository and README
 - [ ] Addition of a graph that creates plots for every pair of variables in a table
-- [ ] Option to change the color of the line depending on the distance between the points
 - [ ] Option to change the background of the plot to be clearer or more visually appealing
 - [ ] Option to add the differences between the points at the side of the plot
 
@@ -91,13 +92,47 @@ The next additions to the function will be:
 - Type: numeric scalar
 - Purpose: width of the lines connecting the dots
 
-**Fontsize**
+**TextSize**
 - Type: numeric scalar
 - Purpose: Font size of descriptive text next to datapoints
 
 **TextInside**
 - Type: logical
 - Purpose: Text inside or outside (default) of the data points
+
+**AxesFontSize**
+- Type: numeric scalar
+- Purpose: set font size for axes
+
+**ColorDist**
+- Type: char or string
+- accepted values: "false" (default), "directional", "magnitude", "robust"
+- Purpose: Determine whether to color the bars of the dumbbels based on the specified distance
+
+When using the ColorDist parameter, the connecting lines are colored based 
+on the difference between values, helping visualize the magnitude and/or direction of change
+
+When choosing "directional", the color is based on the difference between 
+X2 and X1, normalized in the range [0 1] with the Min Max normalization, calculated as follows:
+
+$$x_{norm}= \frac{\text{diff}-min(x)}{max(x)-min(x)}\quad \text{where diff}=X_2-X_1$$
+
+This calculation is performed automatically by the native MATLAB function `rescale()`
+
+When choosing "magnitude" the absolute value of the difference is taken into account,
+this means it doesn't take into account direction of the variation, but only magnitude
+the data is then scaled in range [0 1] using the Min Max normalization descripted above
+
+When choosing the "robust" method, the color of the bars is determined through robust scaling,
+using the following formula: 
+$$x_{robust}=\frac{\text{diff}-\text{median(x)}}{\text{IQR}}\quad \text{where diff}=X_2-X_1$$
+The data is then clipped in the range [-2 2] to prevent extreme outliers 
+from dominating the color scale. After clipping, the values are used as indexes for the colormap
+
+**Choosing a Method:**
+- "Directional" is best for showing both magnitude and direction of the change
+- "magnitude" is best when direction doesn't matter and you just want to show how big is the difference
+- "robus" is best for handling data which contains outliers that would otherwise shift the scale of the colormap
 
 ## Output
 **ax:**
@@ -201,3 +236,29 @@ dumbbellPlot(before_campaign, after_campaign, 'labelX1', 'Pre-Campaign', ...
 ```
 
 ![Example 5 output](images/Example5.png)
+
+## Directional vs Robust method for colouring the bars
+```
+%% Example 6: Directional vs Robust Color Scaling with Outlier
+% Demonstrates the difference between standard and robust scaling methods
+
+% Sample data with outlier
+products = {'Product A', 'Product B', 'Product C', 'Product D', 'Product E', 'Product F'};
+Q1_sales = [120, 135, 128, 145, 130, 130];
+Q2_sales = [135, 145, 138, 155, 250, 135]; % Q2 contains an outlier!!! 
+
+figure;
+
+subplot(2, 1, 1);
+dumbbellPlot(Q1_sales, Q2_sales,'YLabels', products,'labelX1', 'Q1','labelX2', 'Q2', ...
+    'Title', 'Directional Scaling','ColorDist', 'directional','LineWidth', 3);
+
+subplot(2, 1, 2);
+dumbbellPlot(Q1_sales, Q2_sales, 'YLabels', products, 'labelX1', 'Q1', ...
+    'labelX2', 'Q2','Title', 'Robust Scaling','ColorDist', 'robust', 'LineWidth', 3);
+
+% Add overall title
+sgtitle('Comparison of Color Scaling Methods')
+```
+
+![Example 6 output](images/Example6.png)

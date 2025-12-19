@@ -306,35 +306,78 @@ else
     LineWidth= 1.2; % setdefault
 end
 
-if isfield(options, "Fontsize")
-    if isnumeric(options.Fontsize) && isscalar(options.Fontsize)
-        Fontsize= options.Fontsize;
+if isfield(options, "TextSize")
+    if isnumeric(options.TextSize) && isscalar(options.TextSize)
+        TextSize= options.TextSize;
     else
-        warning("dumbbellPlot:InvalidFontSize", "Invalid Font size provided, using default")
-        Fontsize= 12.1;
+        warning("dumbbellPlot:InvalidTextSize", "Invalid Text size provided, using default")
+        TextSize= 12.1;
     end
 else
-    Fontsize= 12.1; %default
+    TextSize= 12.1; %default
 end
 
 if isfield(options, "TextInside")
-    if islogical(options.TextInside)
+    if islogical(options.TextInside) && isscalar(options.TextInside)
         TextInside= options.TextInside;
     else
-        warning("dumbbellPlot:InvalidTextInside", "Text Inside needs to be a logical (true or false) value!")
+        warning("dumbbellPlot:InvalidTextInside", "Text Inside needs to be a scalar logical (true or false) value!")
         TextInside= false;
     end
 else
     TextInside= false;
+end
+
+if isfield(options, "ColorDist")
+    if (ischar(options.ColorDist) && isrow(options.ColorDist)) || (isstring(options.ColorDist) && isscalar(options.ColorDist))
+        ColorDist= string(options.ColorDist);
+
+        % validate type
+        validTypes = ["false", "directional", "magnitude", "robust"];
+        if ~ismember(ColorDist, validTypes)
+            warning("dumbbellPlot:InvalidColorDist", ...
+                "ColorDist must be 'false', 'directional', 'magnitude', or 'robust'. Using default (false)")   
+            ColorDist = "false";
+        end
+    else
+        warning("dumbbellPlot:InvalidColorDist", "ColorDist needs to be a supported type of distance!")
+        ColorDist= "false";
+    end
+else
+    ColorDist= "false";
+end
+
+if isfield(options, "AxesFontSize")
+    if isnumeric(options.AxesFontSize) && isscalar(options.AxesFontSize)
+        AxesFontSize= options.AxesFontSize;
+    else
+        warning("dumbbellPlot:InvalidFontSize","Invalid Font Size for axes provided, using default")
+        AxesFontSize= 13;
+    end
+else
+    AxesFontSize= 13;
 end
 %% main body
 switch strcat(plotType,"_",orientation)
     case "single_horizontal"
         
         ax = gca;
-        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,Fontsize,TextInside);
+        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,TextSize,TextInside,ColorDist,AxesFontSize);
         [h1, h2] = chart.build(ax);
         legend([h1 h2], {labelX1, labelX2}, "Location","bestoutside")
+
+        if ColorDist ~= "false"
+            colormap(ax, turbo(256))
+            cb = colorbar(ax);
+            cb.Label.String = "Difference: "+ColorDist;
+
+            if ColorDist == "directional"
+                clim(ax, [-1 1]); % realtive scale
+                cb.Label.String = "Difference: Directional (relative scale)";
+            elseif ColorDist == "robust"
+                clim(ax, [-2, 2]); % remember to match value that used in clipping
+            end
+        end
 
         % title
         if Title ~= ""
@@ -343,9 +386,22 @@ switch strcat(plotType,"_",orientation)
 
     case "single_vertical"
         ax = gca;
-        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,Fontsize,TextInside);
+        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,TextSize,TextInside,ColorDist,AxesFontSize);
         [h1, h2] = chart.buildVertical(ax);
         legend([h1 h2], {labelX1, labelX2}, "Location","bestoutside")
+
+        if ColorDist ~= "false"
+            colormap(ax, turbo(256))
+            cb = colorbar(ax);
+            cb.Label.String = "Difference: "+ColorDist;
+
+            if ColorDist == "directional"
+                clim(ax, [-1 1]); 
+                cb.Label.String = "Difference: Directional (relative scale)";
+            elseif ColorDist == "robust"
+                clim(ax, [-2, 2]); % remember to match clipping
+            end
+        end
 
         % title
         if Title ~= ""
@@ -356,16 +412,31 @@ switch strcat(plotType,"_",orientation)
         t = tiledlayout(2, 1, 'TileSpacing', 'compact', 'Padding', 'compact');
 
         ax1 = nexttile;
-        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,Fontsize,TextInside);
+        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,TextSize,TextInside,ColorDist,AxesFontSize);
         [h1, h2] = chart.build(ax1);
         legend(ax1, [h1 h2], {labelX1, labelX2}, "Location","best")
         
         ax2= nexttile;
-        chart2 = DumbbellChart(X3,X4, YLabels,colors,sz,LineWidth,Fontsize,TextInside);
+        chart2 = DumbbellChart(X3,X4, YLabels,colors,sz,LineWidth,TextSize,TextInside,ColorDist,AxesFontSize);
         [~, ~] = chart2.build(ax2);
 
         title(ax1, Title{1});
         title(ax2, Title{2});
+
+        if ColorDist ~= "false"
+            colormap(ax1, turbo(256))
+            colormap(ax2, turbo(256))
+            cb = colorbar(ax2);
+            cb.Layout.Tile = 'east';
+            cb.Label.String = "Difference: "+ColorDist;
+
+            if ColorDist == "directional"
+                clim(ax, [-1 1]);
+                cb.Label.String = "Difference: Directional (relative scale)";
+            elseif ColorDist == "robust"
+                clim(ax, [-2, 2]); % remember to match clipping
+            end
+        end
 
         % return value
         ax = [ax1; ax2];
@@ -374,11 +445,11 @@ switch strcat(plotType,"_",orientation)
         t = tiledlayout(1, 2, 'TileSpacing', 'compact', 'Padding', 'compact');
 
         ax1 = nexttile;
-        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,Fontsize,TextInside);
+        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,TextSize,TextInside,ColorDist,AxesFontSize);
         [h1, h2] = chart.buildVertical(ax1);
         
         ax2 = nexttile;
-        chart2 = DumbbellChart(X3,X4, YLabels,colors,sz,LineWidth,Fontsize,TextInside);
+        chart2 = DumbbellChart(X3,X4, YLabels,colors,sz,LineWidth,TextSize,TextInside,ColorDist,AxesFontSize);
         [~, ~] = chart2.buildVertical(ax2);
         legend(ax2, [h1 h2], {labelX1, labelX2}, "Location","best")
         ax2.YAxisLocation= "right";
@@ -386,6 +457,21 @@ switch strcat(plotType,"_",orientation)
         
         title(ax1, Title{1});
         title(ax2, Title{2});
+
+        if ColorDist ~= "false"
+            colormap(ax1, turbo(256))
+            colormap(ax2, turbo(256))
+            cb = colorbar(ax2);
+            cb.Layout.Tile = 'east';
+            cb.Label.String = "Difference: "+ColorDist;
+
+            if ColorDist == "directional"
+                clim(ax, [-1 1]);
+                cb.Label.String = "Difference: Directional (relative scale)";
+            elseif ColorDist == "robust"
+                clim(ax, [-2, 2]); % remember to match clipping value
+            end
+        end
 
         % return value
         ax = [ax1; ax2];
