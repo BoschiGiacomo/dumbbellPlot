@@ -125,7 +125,9 @@ the data is then scaled in range [0 1] using the Min Max normalization descripte
 
 When choosing the "robust" method, the color of the bars is determined through robust scaling,
 using the following formula: 
+
 $$x_{robust}=\frac{\text{diff}-\text{median(x)}}{\text{IQR}}\quad \text{where diff}=X_2-X_1$$
+
 The data is then clipped in the range [-2 2] to prevent extreme outliers 
 from dominating the color scale. After clipping, the values are used as indexes for the colormap
 
