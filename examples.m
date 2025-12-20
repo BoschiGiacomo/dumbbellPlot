@@ -28,15 +28,12 @@ dumbbellPlot(jan_morning, jan_evening, jun_morning, jun_evening, ...
 % Quarterly trade data for 6 countries (in billions USD)
 countries = {'USA', 'China', 'Germany', 'Japan', 'UK', 'India'};
 
-% Q1 data
 q1_imports = [85, 72, 45, 38, 55, 42];
 q1_exports = [78, 95, 52, 41, 48, 35];  
 
-% Q3 data  
 q3_imports = [92, 68, 48, 35, 58, 48];
 q3_exports = [82, 102, 58, 44, 51, 38];  
 
-% Create table with all 4 variables
 tradeData = table(q1_imports', q1_exports', q3_imports', q3_exports','VariableNames', ...
     {'Q1_Imports', 'Q1_Exports', 'Q3_Imports', 'Q3_Exports'}, 'RowNames', countries);
 
@@ -87,5 +84,14 @@ subplot(2, 1, 2);
 dumbbellPlot(Q1_sales, Q2_sales, 'YLabels', products, 'labelX1', 'Q1', ...
     'labelX2', 'Q2','Title', 'Robust Scaling','ColorDist', 'robust', 'LineWidth', 3);
 
-% Add overall title
 sgtitle('Comparison of Color Scaling Methods')
+
+%% Example 7: Background bands added
+
+X1 = [45, 62, 38, 71, 55, 48];
+X2 = [58, 55, 75, 84, 68, 52];
+categories = {'Sales', 'Marketing', 'IT', 'HR', 'Finance', 'Operations'};
+
+figure;
+dumbbellPlot(X1,X2, "YLabels", categories, "Title", "Horizontal Plot with background bands", ...
+    "TextInside", true, "labelX1","Q1", "labelX2", "Q2", "Background", "bands");

@@ -14,10 +14,12 @@ classdef DumbbellChart
         TextInside (1,1) logical
         ColorDist (1,1) string
         AxesFontSize (1,1) double
+        Background (1,1) string
+        BackgroundColor (2,3) double
     end
 
     methods
-        function obj = DumbbellChart(x1, x2, YLabels, colors, sz, LineWidth, TextSize, TextInside, ColorDist, AxesFontSize)
+        function obj = DumbbellChart(x1, x2, YLabels, colors, sz, LineWidth, TextSize, TextInside, ColorDist, AxesFontSize, Background)
             % Object constructor method
             % Required inputs: x1 and x2, which are the 2 sets of data
             % confronted
@@ -35,6 +37,8 @@ classdef DumbbellChart
             obj.TextInside = TextInside;
             obj.ColorDist = ColorDist;
             obj.AxesFontSize = AxesFontSize;
+            obj.Background = Background;
+            obj.BackgroundColor = [0.86 0.90 0.95; 0.92 0.94 0.97];
         end
 
         function [h1, h2] = build(obj, axesHandle)
@@ -53,9 +57,49 @@ classdef DumbbellChart
 
             % lines and descrioptors
             allValues = [obj.Value1, obj.Value2];
-            dataRange = max(allValues) - min(allValues);
+            maxData= max(allValues);
+            minData= min(allValues);
+            dataRange = maxData - minData;
             dx = dataRange * 0.02; % data text horizontal offset
             dy= 0.2; % vertical offset
+
+            yAxisLim = [0.5 n+0.5];
+            xAxisLim = [minData-2.5 maxData+2.5];
+            ylim(axesHandle, yAxisLim);
+            xlim(axesHandle, xAxisLim);
+            
+
+            if obj.Background ~= "none"
+                % this is a version compatible with older versions of matlab
+                % TODO: create a version which uses yregion and xregion for
+                % newer releases (2023a+ i believe)
+
+                BGpadding= 10;
+
+                for i = -3:n+3
+
+                    y0 = i-0.5;
+                    y1 = i+0.5;
+
+                    if mod(i,2) == 0
+                        bgColor = obj.BackgroundColor(1,:);
+                    else
+                        bgColor = obj.BackgroundColor(2,:);
+                    end
+                    V = [xAxisLim(1)-BGpadding, y0;
+                        xAxisLim(2)+BGpadding, y0;
+                        xAxisLim(2)+BGpadding, y1;
+                        xAxisLim(1)-BGpadding, y1];
+                    F= [1 2 3 4];
+
+                    p = patch(axesHandle, "Faces", F, "Vertices", V, "FaceColor", ...
+                        bgColor, "EdgeColor", "none", "FaceAlpha", 1);
+
+                    set(p, "HandleVisibility", "off", "HitTest", "off", "PickableParts", "none");
+
+                    uistack(p, "bottom");
+                end
+            end
 
             if obj.ColorDist ~= "false"
 
@@ -115,7 +159,7 @@ classdef DumbbellChart
                     h1 = scatter(axesHandle, obj.Value1, Yposition, obj.sz, obj.colors(1, 1:3), "filled", "o", "MarkerEdgeColor", "k");
                     h2 = scatter(axesHandle, obj.Value2, Yposition, obj.sz, obj.colors(2, 1:3), "filled", "o", "MarkerEdgeColor", "k");
                 case true
-                    if obj.sz == 70.1
+                    if obj.sz == 150.1
                         obj.sz = 400; %overwrite default value
                     end
 
@@ -138,9 +182,6 @@ classdef DumbbellChart
             % data points. alignment with the datapoints doesn't look
             % convenient in case of big numbers...
             
-
-            ylim(axesHandle, [0.5 n+0.5])
-            xlim(axesHandle, "padded")
             yticks(axesHandle, Yposition)
             yticklabels(axesHandle, obj.YLabels)
             xlabel(axesHandle, "Values")
@@ -166,8 +207,45 @@ classdef DumbbellChart
             
             % set vertical % offset based on the data
             allValues = [obj.Value1, obj.Value2];
-            dataRange = max(allValues) - min(allValues);
+            maxData= max(allValues);
+            minData= min(allValues);
+            dataRange = maxData - minData;
             dy = dataRange * 0.02; 
+
+            xAxisLim = [0.5 n+0.5];
+            yAxisLim = [minData-2.5 maxData+2.5];
+            ylim(axesHandle, yAxisLim);
+            xlim(axesHandle, xAxisLim);
+
+            if obj.Background ~= "none"
+                BGpadding= 10;
+
+                for i = -3:n+3
+
+                    x0 = i-0.5;
+                    x1 = i+0.5;
+
+                    if mod(i,2) == 0
+                        bgColor= obj.BackgroundColor(1,:);
+                    else
+                        bgColor= obj.BackgroundColor(2,:);
+                    end
+
+                    V= [x0, yAxisLim(1)-BGpadding;
+                        x1, yAxisLim(1)-BGpadding;
+                        x1, yAxisLim(2)+BGpadding;
+                        x0, yAxisLim(2)+BGpadding];
+
+                    F= [1 2 3 4];
+
+                    p= patch(axesHandle, "Faces", F, "Vertices", V, "FaceColor", bgColor, ...
+                        "EdgeColor", "none", "FaceAlpha", 1);
+
+                    set(p, "HandleVisibility", "off", "HitTest", "off", "PickableParts", "none");
+
+                    uistack(p, "bottom");
+                end
+            end
 
             if obj.ColorDist ~= "false"
 
@@ -222,7 +300,7 @@ classdef DumbbellChart
                     h1 = scatter(axesHandle, Xposition, YValue1, obj.sz, obj.colors(1, 1:3), "filled", "o", "MarkerEdgeColor", "k");
                     h2 = scatter(axesHandle, Xposition, YValue2, obj.sz, obj.colors(2, 1:3), "filled", "o", "MarkerEdgeColor", "k");
                 case true
-                    if obj.sz == 70.1
+                    if obj.sz == 150.1
                         obj.sz = 400; %overwrite default value
                     end
 
@@ -237,12 +315,8 @@ classdef DumbbellChart
                             "HorizontalAlignment","center", "VerticalAlignment", "middle", "FontSize", obj.TextSize, ...
                             "Color", obj.colors(1,1:3))
                     end
-
             end
-
-            xlim(axesHandle, [0.5 n+0.5])
-            ylim(axesHandle, "padded") %lerting MATLAB handle based on the data
-
+            
             xticks(axesHandle, Xposition)
             xticklabels(axesHandle, obj.YLabels)
             ylabel(axesHandle, "Values")

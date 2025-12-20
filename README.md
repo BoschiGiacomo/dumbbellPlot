@@ -16,12 +16,13 @@ Recently added features:
 - [x] addition of functionSignatures.json for customized code suggestions
 - [x] Option to insert the values of the points inside of the points of the plot
 - [x] Option to change the color of the line depending on the distance between the points
+- [x] Option to change the background of the plot to be clearer or more visually appealing
 
 The next additions to the function will be:
 - [ ] Improvement of documentation
 - [ ] restructuring of the repository and README
 - [ ] Addition of a graph that creates plots for every pair of variables in a table
-- [ ] Option to change the background of the plot to be clearer or more visually appealing
+- [ ] Add more background options, and custom background colors
 - [ ] Option to add the differences between the points at the side of the plot
 
 
@@ -135,6 +136,11 @@ from dominating the color scale. After clipping, the values are used as indexes 
 - "Directional" is best for showing both magnitude and direction of the change
 - "magnitude" is best when direction doesn't matter and you just want to show how big is the difference
 - "robus" is best for handling data which contains outliers that would otherwise shift the scale of the colormap
+
+**Background**
+- Type: "char" or string
+- Accepted inputs: "none", "bands"
+- Purpose: Type of background to display in the plot
 
 ## Output
 **ax:**
@@ -264,3 +270,18 @@ sgtitle('Comparison of Color Scaling Methods')
 ```
 
 ![Example 6 output](images/Example6.png)
+
+## Background bands inside the plot
+```
+%% Example 7: Background bands added
+
+X1 = [45, 62, 38, 71, 55, 48];
+X2 = [58, 55, 75, 84, 68, 52];
+categories = {'Sales', 'Marketing', 'IT', 'HR', 'Finance', 'Operations'};
+
+figure;
+dumbbellPlot(X1,X2, "YLabels", categories, "Title", "Horizontal Plot with background bands", ...
+    "TextInside", true, "labelX1","Q1", "labelX2", "Q2", "Background", "bands");
+```
+
+![Example 7 output](images/Example7.png)
