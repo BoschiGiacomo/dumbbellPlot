@@ -431,10 +431,10 @@ switch strcat(plotType,"_",orientation)
             cb.Label.String = "Difference: "+ColorDist;
 
             if ColorDist == "directional"
-                clim(ax, [-1 1]);
+                clim(ax2, [-1 1]);
                 cb.Label.String = "Difference: Directional (relative scale)";
             elseif ColorDist == "robust"
-                clim(ax, [-2, 2]); % remember to match clipping
+                clim(ax2, [-2, 2]); % remember to match clipping
             end
         end
 
@@ -466,10 +466,10 @@ switch strcat(plotType,"_",orientation)
             cb.Label.String = "Difference: "+ColorDist;
 
             if ColorDist == "directional"
-                clim(ax, [-1 1]);
+                clim(ax2, [-1 1]);
                 cb.Label.String = "Difference: Directional (relative scale)";
             elseif ColorDist == "robust"
-                clim(ax, [-2, 2]); % remember to match clipping value
+                clim(ax2, [-2, 2]); % remember to match clipping value
             end
         end
 

@@ -48,7 +48,7 @@
             {"name":"TextSize", "kind":"namevalue", "type":["numeric", "scalar"], "purpose":"Font size of descriptive text next to datapoints"},
             {"name":"TextInside", "kind":"namevalue", "type":["logical", "scalar"], "purpose":"Display text inside the dots"},
             {"name":"AxesFontSize", "kind":"namevalue", "type":["numeric", "scalar"], "purpose":"Set the font size for the axes"},
-    {"name":"ColorDist", "kind":"namevalue", "type":["choices={'false', 'directional', 'magnitude', 'robust'}"], "purpose":"Determine the method for bar colouring"}
+            {"name":"ColorDist", "kind":"namevalue", "type":["choices={'false', 'directional', 'magnitude', 'robust'}"], "purpose":"Determine the method for bar colouring"}
         ],
 
         "description":"Plots the Dumbbell Chart of the provided data."
