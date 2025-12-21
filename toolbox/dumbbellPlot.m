@@ -469,7 +469,7 @@ switch strcat(plotType,"_",orientation)
         chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,TextSize, ...
             TextInside,ColorDist,AxesFontSize,Background);
         [h1, h2] = chart.build(ax);
-        legend([h1 h2], {labelX1, labelX2}, "Location","bestoutside")
+        legend([h1 h2], {labelX1, labelX2}, "Location","best")
 
         if ColorDist ~= "false"
             colormap(ax, turbo(256))
@@ -494,7 +494,7 @@ switch strcat(plotType,"_",orientation)
         chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,TextSize, ...
             TextInside,ColorDist,AxesFontSize,Background);
         [h1, h2] = chart.buildVertical(ax);
-        legend([h1 h2], {labelX1, labelX2}, "Location","bestoutside")
+        legend([h1 h2], {labelX1, labelX2}, "Location","best")
 
         if ColorDist ~= "false"
             colormap(ax, turbo(256))
