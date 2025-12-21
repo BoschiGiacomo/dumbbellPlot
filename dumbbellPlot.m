@@ -1,7 +1,99 @@
 function ax = dumbbellPlot(X, varargin)
 %% dumbbellPlot creates a dumbbell chart comparing two sets of values
 %
-%% Start of code
+%
+%<a href="matlab: docsearchFS('dumbbellPlot')">Link to the help function</a>
+%
+% A dumbbell plot is a data visualization used to compare two values per
+% category. Each category is represented by two points connected by a line,
+% resembling a dumbbell. The two points usually indicate before–after, A vs
+% B, or two time periods. The distance between the points highlights the
+% magnitude of change or difference. Colors or shapes can distinguish the
+% two values clearly. It is especially effective when comparing many
+% categories without clutter. Dumbbell plots emphasize direction of change
+% better than bar charts. They work well with ordered categories to show
+% trends. They require a common numeric scale for meaningful comparison.
+% Overall, dumbbell plots provide a clean and intuitive comparison tool.
+%
+%  Required input arguments:
+%
+%            X: Input data. Vector of table with one or more columns.
+%               Data matrix containing n observations
+%                 Data Types -  2D array or table 
+%
+%  Optional input arguments:
+%
+% Orientation  : orientation of the plot. String or char.
+%                 Admissible values are 'horizontal' (default) or 'vertical'
+%               Example - 'Orientation','vertical'
+%               Data Types - string | char
+%
+%   labelX1    : Custom legend label for the first set of data. Char or string. 
+%               The Default label is "X1"  if X1 is numeric vector or the corresponding
+%               table name if X1 is a table.
+%               Example - 'labelX1','mylabelBefore'
+%               Data Types - char or string
+%
+%   labelX2    : Custom legend label for the second set of data. Char or string. 
+%               The Default label is "X2"  if X2 is numeric vector or the corresponding
+%               table name if X2 is a table.
+%               Example - 'labelX2','mylabelAfter'
+%               Data Types - char or string
+%
+%
+%  Output:
+%
+%      ax :    handles to the patches. Vector of graphic handles.
+%               3-by-1 vector of graphic handles.
+%               h(1) is the handle to the patches which are SetAsTotal.
+%               h(2) is the handle to the patches which have positive values.
+%               h(3) is the handle to the patches which have positive values.
+%
+%
+% See also funnelchart
+%
+% References:
+%
+%
+% Copyright 2008-2025.
+% Written by FSDA team
+%
+%
+%
+%<a href="matlab: docsearchFS('waterfallchart')">Link to the help function</a>
+%
+%$LastChangedDate::                      $: Date of the last commit
+
+% Examples:
+%{
+    %% Example data for a 10-row dumbbell chart.
+    categories = "Item " + (1:10)';                 % string array 10x1
+    beforeVals  = [52; 47; 63; 58; 44; 71; 39; 66; 55; 49]; % 10x1 numeric
+    afterVals   = [61; 50; 68; 62; 48; 78; 45; 70; 60; 54]; % 10x1 numeric
+    T = table(beforeVals, afterVals, ...
+        'VariableNames', {'Before','After'},'RowNames',categories);
+    dumbbellPlot(T);
+%}
+
+%{
+    %% Example double vertical plot.
+    % Patient health metrics: systolic BP comparison across two time periods
+    patients = {'Patient A', 'Patient B', 'Patient C', 'Patient D'};
+    
+    % Period 1: January measurements
+    jan_morning = [120, 135, 128, 142];
+    jan_evening = [128, 145, 135, 150];
+    
+    % Period 2: June measurements (after lifestyle changes)
+    jun_morning = [115, 125, 120, 135];
+    jun_evening = [122, 132, 128, 142];
+    figure;
+    dumbbellPlot(jan_morning, jan_evening, jun_morning, jun_evening, ...
+        'plotType', 'double','orientation', 'vertical','labelX1', 'Morning', ...
+      'labelX2', 'Evening','Title', {'January BP', 'June BP'},'YLabels', patients);
+%}
+
+%% Beginning of code
 
 plotType= "single"; %default
 plotTypeidx= find(strcmp(varargin, "plotType"));
@@ -385,7 +477,7 @@ switch strcat(plotType,"_",orientation)
             cb.Label.String = "Difference: "+ColorDist;
 
             if ColorDist == "directional"
-                clim(ax, [-1 1]); % realtive scale
+                clim(ax, [-1 1]); % relative scale
                 cb.Label.String = "Difference: Directional (relative scale)";
             elseif ColorDist == "robust"
                 clim(ax, [-2, 2]); % remember to match value that used in clipping
