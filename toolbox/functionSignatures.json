@@ -6,10 +6,10 @@
         "inputs":
         [
             {"name":"tbl", "kind":"required", "type":"table", "purpose":"Input Data"},
-            {"name":"var1", "kind":"required", "type":["choices=X.Properties.VariableNames"], "purpose":"First variable of the table to plot"},
-            {"name":"var2", "kind":"required", "type":["choices=X.Properties.VariableNames"], "purpose":"Second variable of the table to plot"},
-            {"name":"var3", "kind":"positional", "type":["choices=X.Properties.VariableNames"], "purpose":"Third variable of the table to plot (in case of double plot)"},
-            {"name":"var4", "kind":"positional", "type":["choices=X.Properties.VariableNames"], "purpose":"Fourth variable of the table to plot (in case of double plot)"},
+            {"name":"var1", "kind":"positional", "type":["choices=tbl.Properties.VariableNames"], "purpose":"First variable of the table to plot"},
+            {"name":"var2", "kind":"positional", "type":["choices=tbl.Properties.VariableNames"], "purpose":"Second variable of the table to plot"},
+            {"name":"var3", "kind":"positional", "type":["choices=tbl.Properties.VariableNames"], "purpose":"Third variable of the table to plot (in case of double plot)"},
+            {"name":"var4", "kind":"positional", "type":["choices=tbl.Properties.VariableNames"], "purpose":"Fourth variable of the table to plot (in case of double plot)"},
             {"name":"plotType", "kind":"namevalue", "type":["choices={'single', 'double'}"], "purpose":"Type of plot to produce"},
             {"name":"orientation", "kind":"namevalue", "type":["choices={'horizontal', 'vertical'}"], "purpose":"Horizontal (default) or Vertical plot"},
             {"name":"labelX1", "kind":"namevalue", "type":[["string"], ["char"]], "purpose":"Legend label for the first set of data"},

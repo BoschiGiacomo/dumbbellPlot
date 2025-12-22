@@ -17,16 +17,16 @@ function ax = dumbbellPlot(X, varargin)
 %
 %  Required input arguments:
 %
-%            X: Input data. Vector of table with one or more columns.
+%            X: Input data. Vector or table with one or more columns.
 %               Data matrix containing n observations
 %                 Data Types -  2D array or table 
 %
 %  Optional input arguments:
 %
-% Orientation  : orientation of the plot. String or char.
+%  orientation  : orientation of the plot. String or char.
 %                 Admissible values are 'horizontal' (default) or 'vertical'
 %               Example - 'Orientation','vertical'
-%               Data Types - string | char
+%               Data Types - string or char
 %
 %   labelX1    : Custom legend label for the first set of data. Char or string. 
 %               The Default label is "X1"  if X1 is numeric vector or the corresponding
@@ -40,14 +40,85 @@ function ax = dumbbellPlot(X, varargin)
 %               Example - 'labelX2','mylabelAfter'
 %               Data Types - char or string
 %
+%   plotType   : Type of plot layout. Char or String.
+%               Determines wheter to create a single plot or a side by side
+%               plot. Admissible values are 'single' (default) or 'double'
+%               Example - 'plotType', 'double'
+%               Data Types - char or string
+%
+%   Title      : plot title(s). string or char or cell array.
+%               Title(s) for the chart(s). The number of input titles, must 
+%               be equal to the number of plots that are created. Default 
+%               value for double plots is ['Year 1' 'Year 2']
+%               Example - 'Title', '2025 products revenue'
+%               Data Types - string or char or cell array
+%
+%   YLabels    : Custom tick labels. string or char or cell array.
+%              Custom labels for each category (row) in the plot. Must have
+%              the same lenght as the number of rows. If not provided,
+%              default names will be used ('Row 1', 'Row 2',...)
+%              Example - 'YLabels', ["Product A", "Product B", "Product C"]
+%              Data Types - string | char | cell array
+%
+%   Color      : Color of the dots. string or char or 2x3 numeric array.
+%              Specifies the colors for the two sets of dots. Can be either
+%              a built-in palette ('default', 'colorblind', 'ruby_jade','cherry_sky', 'red_blue')
+%               or a 2x3 array of RGP triplets where each row defines the
+%               color of a set of dots.
+%              Example - 'Color', [0.88, 0.30, 0.30; 0.20, 0.42, 0.85]
+%              Data Types - string | char | array of 2 valid MATLAB colours
+%             
+%   MarkerSize : Size of the dots. numeric scalar or vector.
+%              If scalar, all markers use the same size. If vector, it must
+%              have the same length as the number of data pairs (rows), and
+%              each pair of dots will use the corresponding size value.
+%              Example - 'MarkerSize', 200
+%              Data Types - numeric scalar or vector
+%
+%   LineWidth  : Width of the bars of the plot. numeric scalar.
+%               Controls the thickness of the lines (bars) connecting each
+%               pair of dots in the dumbbell plot.
+%               Example - 'LineWidth', 2.5
+%               Data Types - Double
+%
+%   TextSize   : Font size of data value labels. numeric scalar.
+%              Controls the font size of the numeric labels displayed
+%              near or inside the dots.
+%              Example - 'TextSize', 14
+%              Data Types - double
+%
+%   TextInside : Position of data value labels. Logical scalar.
+%              When true, numeric labels are displayed inside the marker dots.
+%              if false, labels are positioned outside the markers. 
+%              Example - 'TextInside', true
+%              Data Types - logical
+%
+% AxesFontSize : Font size of axis labels and ticks. Numeric scalar.
+%              Controls the font size of the axis labels.
+%              Example - 'AxesFontSize', 15
+%              Data Types - double
+%
+%   ColorDist  : Color mapping based on difference between points. String or char.
+%              Controls whether and how the connecting lines are colored based
+%              on the difference between the two values. 
+%              Admissible values are:'false' (default) 'directional','magnitude','robust'
+%              Example - 'ColorDist', 'directional'
+%              Data Types - string | char
+%
+% Background : Style of background of the plot. String or char.
+%              Controls whether alternating background bands are displayed
+%              behind the plot. Admissible values: 'none' (default), 'bands'
+%              Example - 'Background', 'bands'
+%              Data Types - string | char
+%
+%
 %
 %  Output:
 %
-%      ax :    handles to the patches. Vector of graphic handles.
-%               3-by-1 vector of graphic handles.
-%               h(1) is the handle to the patches which are SetAsTotal.
-%               h(2) is the handle to the patches which have positive values.
-%               h(3) is the handle to the patches which have positive values.
+%      ax :    handles to the charts. Graphic handle or Vector of graphic handles.
+%              If the plot is single, a single ax handle is return; else, ax
+%              is a vector containing the graphics handles for all the
+%              plots
 %
 %
 % See also funnelchart
@@ -67,9 +138,9 @@ function ax = dumbbellPlot(X, varargin)
 % Examples:
 %{
     %% Example data for a 10-row dumbbell chart.
-    categories = "Item " + (1:10)';                 % string array 10x1
-    beforeVals  = [52; 47; 63; 58; 44; 71; 39; 66; 55; 49]; % 10x1 numeric
-    afterVals   = [61; 50; 68; 62; 48; 78; 45; 70; 60; 54]; % 10x1 numeric
+    categories = "Item " + (1:10)';                 
+    beforeVals  = [52; 47; 63; 58; 44; 71; 39; 66; 55; 49];
+    afterVals   = [61; 50; 68; 62; 48; 78; 45; 70; 60; 54]; 
     T = table(beforeVals, afterVals, ...
         'VariableNames', {'Before','After'},'RowNames',categories);
     dumbbellPlot(T);
@@ -91,6 +162,35 @@ function ax = dumbbellPlot(X, varargin)
     dumbbellPlot(jan_morning, jan_evening, jun_morning, jun_evening, ...
         'plotType', 'double','orientation', 'vertical','labelX1', 'Morning', ...
       'labelX2', 'Evening','Title', {'January BP', 'June BP'},'YLabels', patients);
+%}
+
+%{
+    %% Example of MarkerSize being used to show weights
+    products = {'Product A', 'Product B', 'Product C', 'Product D', 'Product E'};
+    before_campaign = [65, 45, 78, 52, 88];
+    after_campaign = [82, 68, 95, 71, 92];
+
+    % Marker sizes based on revenue importance (arbitrary weights)
+    importance = [300, 200, 150, 90, 450];
+
+    figure;
+    dumbbellPlot(before_campaign, after_campaign, ...
+        'MarkerSize', importance, ...           
+        'labelX1', 'Pre-Campaign', ...
+        'labelX2', 'Post-Campaign', ...
+        'Title', 'Marketing Campaign Impact (marker size = revenue weight)', ...
+        'YLabels', products);
+%}
+
+%{
+    %% Example of plot with background bands and text inside the dots
+    X1 = [45, 62, 38, 71, 55, 48];
+    X2 = [58, 55, 75, 84, 68, 52];
+    categories = {'Sales', 'Marketing', 'IT', 'HR', 'Finance', 'Operations'};
+
+    figure;
+    dumbbellPlot(X1,X2, "YLabels", categories, "Title", "Horizontal Plot with background bands", ...
+        "TextInside", true, "labelX1","Q1", "labelX2", "Q2", "Background", "bands");
 %}
 
 %% Beginning of code
@@ -281,267 +381,262 @@ else
 end
 
 %% optional inputs
-% store the additional inputs
-options = struct();
+
+% struct required by publishFS function to create the help file
+% default values with a decimal .1 are used as sentinels to detect if
+% default value was used.
+options= struct("labelX1", labelX1, ...
+                "labelX2", labelX2, ...
+                "plotType", plotType, ... %initiated at start of fun
+                "Title", "", ...
+                "YLabels", {YLabels}, ...   %initiated during required input validation
+                "orientation", "horizontal", ...
+                "Color", getColorPalette("default"), ...
+                "MarkerSize", 150.1, ...
+                "LineWidth", 3.1, ...
+                "TextSize", 12.1, ...
+                "TextInside", false, ...
+                "ColorDist", "false", ...
+                "AxesFontSize", 13, ...
+                "Background", "none");
+
+UserOptions = struct();
 if length(varargin) >= vararginStart
     for i = vararginStart:2:length(varargin)
         if i+1 <= length(varargin)
-            options.(varargin{i}) = varargin{i+1};
+            UserOptions.(varargin{i}) = varargin{i+1};
         end
     end
 end
 
-if isfield(options, "labelX1")
-    validateattributes(options.labelX1, {'string', 'char'}, {}, 'dumbellPlot', 'labelX1')
-    labelX1 = string(options.labelX1);
+if isfield(UserOptions, "labelX1")
+    validateattributes(UserOptions.labelX1, {'string', 'char'}, {}, 'dumbellPlot', 'labelX1')
+    options.labelX1 = string(UserOptions.labelX1);
 end
 
-if isfield(options, "labelX2")
-    validateattributes(options.labelX2, {'string', 'char'}, {}, 'dumbellPlot', 'labelX2')
-    labelX2 = string(options.labelX2);
+if isfield(UserOptions, "labelX2")
+    validateattributes(UserOptions.labelX2, {'string', 'char'}, {}, 'dumbellPlot', 'labelX2')
+    options.labelX2 = string(UserOptions.labelX2);
 end
 
-
-if plotType == "single"
-    Title = "";
-elseif plotType == "double"
-    Title = ["Year 1"; "Year 2"];
+if options.plotType == "double"
+    options.Title = ["Year 1"; "Year 2"]; % set default in case of double plot
 end
 
-if isfield(options, "Title")
-    validateattributes(options.Title, {'string', 'char', 'cell'}, {}, 'dumbellPlot', 'Title')
+if isfield(UserOptions, "Title")
+    validateattributes(UserOptions.Title, {'string', 'char', 'cell'}, {}, 'dumbellPlot', 'Title')
 
-    if iscell(options.Title)
-        tempTitle = options.Title;
+    if iscell(UserOptions.Title)
+        tempTitle = UserOptions.Title;
     else
-        tempTitle = cellstr(options.Title);
+        tempTitle = cellstr(UserOptions.Title);
     end
 
-    if plotType == "single"
+    if options.plotType == "single"
         if numel(tempTitle) ~= 1
             warning("dumbbellPlot:TitleMismatch", "Single plot requires 1 title, default will be used")
         else
-            Title=string(tempTitle{1});
+            options.Title=string(tempTitle{1});
         end
-    elseif plotType == "double"
+    elseif options.plotType == "double"
         if numel(tempTitle) ~= 2
             warning("dumbbellPlot:TitleMismatch", "Double plot requires 2 titles, default will be used")
         else
-            Title=tempTitle;
+            options.Title=tempTitle;
         end
     end
 end
 
-if isfield(options, "YLabels")
-    validateattributes(options.YLabels, {'string', 'char', 'cell'}, {}, 'dumbbellPlot', 'YLabels')
+if isfield(UserOptions, "YLabels")
+    validateattributes(UserOptions.YLabels, {'string', 'char', 'cell'}, {}, 'dumbbellPlot', 'YLabels')
 
-    if iscell(options.YLabels)
-        tempYLabels = options.YLabels;
+    if iscell(UserOptions.YLabels)
+        tempYLabels = UserOptions.YLabels;
     else
-        tempYLabels = cellstr(options.YLabels);
+        tempYLabels = cellstr(UserOptions.YLabels);
     end
 
     if length(tempYLabels) ~= length(X1)
         warning("dumbbellPlot:YLabelsMismatch", "Ylabels and X lenght does not match, default YLabels will be used")
     else
-        YLabels= tempYLabels;
+        options.YLabels= tempYLabels;
     end
 end
 
-if isfield(options, "orientation")
-    validateattributes(options.orientation, {'string', 'char'}, {}, 'dumbbellPlot', 'orientation')
-    orientation= options.orientation;
-else
-    orientation= "horizontal";
+if isfield(UserOptions, "orientation")
+    validateattributes(UserOptions.orientation, {'string', 'char'}, {}, 'dumbbellPlot', 'orientation')
+    options.orientation= UserOptions.orientation;
 end
 
-if isfield(options, "Color")
-    if (ischar(options.Color) && isrow(options.Color)) || (isstring(options.Color) && isscalar(options.Color))
-        colors = getColorPalette(options.Color);
+if isfield(UserOptions, "Color")
+    if (ischar(UserOptions.Color) && isrow(UserOptions.Color)) || (isstring(UserOptions.Color) && isscalar(UserOptions.Color))
+        options.Color = getColorPalette(UserOptions.Color);
     else
         try
-            colors = validatecolor(options.Color, "multiple");
-            if size(colors, 1) ~= 2
+            options.Color = validatecolor(UserOptions.Color, "multiple");
+            if size(options.Color, 1) ~= 2
                 warning("dumbbellPlot:InvalidColor", "Color must provide exactly 2 valid colors, default palette will be used")
-                colors = getColorPalette("default");
+                options.Color = getColorPalette("default");
             end
         catch ME
             warning("dumbbellPlot:InvalidColor", "Invalid Color, default palette will be used")
-            colors = getColorPalette("default");
+            options.Color = getColorPalette("default");
         end
     end
-else
-    colors = getColorPalette("default");
 end
 
-if isfield(options, "MarkerSize")
-    if isnumeric(options.MarkerSize) && isscalar(options.MarkerSize)
-        sz= options.MarkerSize;
-    elseif isnumeric(options.MarkerSize) && length(options.MarkerSize) == length(X1)
-        sz= options.MarkerSize;
+if isfield(UserOptions, "MarkerSize")
+    if isnumeric(UserOptions.MarkerSize) && isscalar(UserOptions.MarkerSize)
+        options.MarkerSize= UserOptions.MarkerSize;
+    elseif isnumeric(UserOptions.MarkerSize) && length(UserOptions.MarkerSize) == length(X1)
+        options.MarkerSize= UserOptions.MarkerSize;
     else
         warning("dumbbellPlot:InvalidMarkerSize", "Invalid Marker size provided, using default")
-        sz= 150.1;
     end
-else
-    sz= 150.1; % set default
 end
 
-if isfield(options, "LineWidth")
-    if isnumeric(options.LineWidth) && isscalar(options.LineWidth)
-        LineWidth= options.LineWidth;
+if isfield(UserOptions, "LineWidth")
+    if isnumeric(UserOptions.LineWidth) && isscalar(UserOptions.LineWidth)
+        options.LineWidth= UserOptions.LineWidth;
     else
         warning("dumbbellPlot:InvalidLineWidth", "Invalid Line Width provided, using default")
-        LineWidth= 3.1;
+        options.LineWidth= 3.1;
     end
-else
-    LineWidth= 3.1; % setdefault
 end
 
-if isfield(options, "TextSize")
-    if isnumeric(options.TextSize) && isscalar(options.TextSize)
-        TextSize= options.TextSize;
+if isfield(UserOptions, "TextSize")
+    if isnumeric(UserOptions.TextSize) && isscalar(UserOptions.TextSize)
+        options.TextSize= UserOptions.TextSize;
     else
         warning("dumbbellPlot:InvalidTextSize", "Invalid Text size provided, using default")
-        TextSize= 12.1;
     end
-else
-    TextSize= 12.1; %default
 end
 
-if isfield(options, "TextInside")
-    if islogical(options.TextInside) && isscalar(options.TextInside)
-        TextInside= options.TextInside;
+if isfield(UserOptions, "TextInside")
+    if islogical(UserOptions.TextInside) && isscalar(UserOptions.TextInside)
+        options.TextInside= UserOptions.TextInside;
     else
         warning("dumbbellPlot:InvalidTextInside", "Text Inside needs to be a scalar logical (true or false) value!")
-        TextInside= false;
     end
-else
-    TextInside= false;
 end
 
-if isfield(options, "ColorDist")
-    if (ischar(options.ColorDist) && isrow(options.ColorDist)) || (isstring(options.ColorDist) && isscalar(options.ColorDist))
-        ColorDist= string(options.ColorDist);
+if isfield(UserOptions, "ColorDist")
+    if (ischar(UserOptions.ColorDist) && isrow(UserOptions.ColorDist)) || (isstring(UserOptions.ColorDist) && isscalar(UserOptions.ColorDist))
+        options.ColorDist= string(UserOptions.ColorDist);
 
         % validate type
         validTypes = ["false", "directional", "magnitude", "robust"];
-        if ~ismember(ColorDist, validTypes)
+        if ~ismember(options.ColorDist, validTypes)
             warning("dumbbellPlot:InvalidColorDist", ...
                 "ColorDist must be 'false', 'directional', 'magnitude', or 'robust'. Using default (false)")   
-            ColorDist = "false";
         end
     else
-        warning("dumbbellPlot:InvalidColorDist", "ColorDist needs to be a supported type of distance!")
-        ColorDist= "false";
+        warning("dumbbellPlot:InvalidColorDist", "ColorDist needs to be char or string")
     end
-else
-    ColorDist= "false";
 end
 
-if isfield(options, "AxesFontSize")
-    if isnumeric(options.AxesFontSize) && isscalar(options.AxesFontSize)
-        AxesFontSize= options.AxesFontSize;
+if isfield(UserOptions, "AxesFontSize")
+    if isnumeric(UserOptions.AxesFontSize) && isscalar(UserOptions.AxesFontSize)
+        options.AxesFontSize= UserOptions.AxesFontSize;
     else
         warning("dumbbellPlot:InvalidFontSize","Invalid Font Size for axes provided, using default")
-        AxesFontSize= 13;
     end
-else
-    AxesFontSize= 13;
 end
 
-if isfield(options, "Background")
+if isfield(UserOptions, "Background")
     validBG= ["bands", "none"];
-    if ismember(options.Background, validBG)
-        Background= string(options.Background);
+    if ismember(UserOptions.Background, validBG)
+        options.Background= string(UserOptions.Background);
     else
         warning("dumbbellPlot:InvalidBakgroundOption","Invalid Background option provided, using default (no background)")
-        Background= "none";
     end
 else
-    Background= "none";
 end
 %% main body
-switch strcat(plotType,"_",orientation)
+switch strcat(options.plotType,"_",options.orientation)
     case "single_horizontal"
         
         ax = gca;
-        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,TextSize, ...
-            TextInside,ColorDist,AxesFontSize,Background);
+        chart = DumbbellChart(X1,X2,options.YLabels,options.Color,options.MarkerSize, ...
+                            options.LineWidth,options.TextSize,options.TextInside, ...
+                            options.ColorDist,options.AxesFontSize,options.Background);
         [h1, h2] = chart.build(ax);
-        legend([h1 h2], {labelX1, labelX2}, "Location","best")
+        legend([h1 h2], {options.labelX1, options.labelX2}, "Location","best")
 
-        if ColorDist ~= "false"
+        if options.ColorDist ~= "false"
             colormap(ax, turbo(256))
             cb = colorbar(ax);
-            cb.Label.String = "Difference: "+ColorDist;
+            cb.Label.String = "Difference: "+options.ColorDist;
 
-            if ColorDist == "directional"
+            if options.ColorDist == "directional"
                 clim(ax, [-1 1]); % relative scale
                 cb.Label.String = "Difference: Directional (relative scale)";
-            elseif ColorDist == "robust"
+            elseif options.ColorDist == "robust"
                 clim(ax, [-2, 2]); % remember to match value that used in clipping
             end
         end
 
         % title
-        if Title ~= ""
-            title(ax, Title);
+        if options.Title ~= ""
+            title(ax, options.Title);
         end
 
     case "single_vertical"
         ax = gca;
-        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,TextSize, ...
-            TextInside,ColorDist,AxesFontSize,Background);
+        chart = DumbbellChart(X1,X2,options.YLabels,options.Color,options.MarkerSize, ...
+                            options.LineWidth,options.TextSize,options.TextInside, ...
+                            options.ColorDist,options.AxesFontSize,options.Background);
         [h1, h2] = chart.buildVertical(ax);
-        legend([h1 h2], {labelX1, labelX2}, "Location","best")
+        legend([h1 h2], {options.labelX1, options.labelX2}, "Location","best")
 
-        if ColorDist ~= "false"
+        if options.ColorDist ~= "false"
             colormap(ax, turbo(256))
             cb = colorbar(ax);
-            cb.Label.String = "Difference: "+ColorDist;
+            cb.Label.String = "Difference: "+options.ColorDist;
 
-            if ColorDist == "directional"
+            if options.ColorDist == "directional"
                 clim(ax, [-1 1]); 
                 cb.Label.String = "Difference: Directional (relative scale)";
-            elseif ColorDist == "robust"
+            elseif options.ColorDist == "robust"
                 clim(ax, [-2, 2]); % remember to match clipping
             end
         end
 
         % title
-        if Title ~= ""
-            title(ax, Title);
+        if options.Title ~= ""
+            title(ax, options.Title);
         end
 
     case "double_horizontal"
         t = tiledlayout(2, 1, 'TileSpacing', 'compact', 'Padding', 'compact');
 
         ax1 = nexttile;
-        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,TextSize, ...
-            TextInside,ColorDist,AxesFontSize,Background);
+        chart = DumbbellChart(X1,X2,options.YLabels,options.Color,options.MarkerSize, ...
+                            options.LineWidth,options.TextSize,options.TextInside, ...
+                            options.ColorDist,options.AxesFontSize,options.Background);
         [h1, h2] = chart.build(ax1);
-        legend(ax1, [h1 h2], {labelX1, labelX2}, "Location","best")
+        legend(ax1, [h1 h2], {options.labelX1, options.labelX2}, "Location","best")
         
         ax2= nexttile;
-        chart2 = DumbbellChart(X3,X4, YLabels,colors,sz,LineWidth,TextSize, ...
-            TextInside,ColorDist,AxesFontSize,Background);
+        chart2 = DumbbellChart(X3,X4,options.YLabels,options.Color,options.MarkerSize, ...
+                            options.LineWidth,options.TextSize,options.TextInside, ...
+                            options.ColorDist,options.AxesFontSize,options.Background);
         [~, ~] = chart2.build(ax2);
 
-        title(ax1, Title{1});
-        title(ax2, Title{2});
+        title(ax1, options.Title{1});
+        title(ax2, options.Title{2});
 
-        if ColorDist ~= "false"
+        if options.ColorDist ~= "false"
             colormap(ax1, turbo(256))
             colormap(ax2, turbo(256))
             cb = colorbar(ax2);
             cb.Layout.Tile = 'east';
-            cb.Label.String = "Difference: "+ColorDist;
+            cb.Label.String = "Difference: "+options.ColorDist;
 
-            if ColorDist == "directional"
+            if options.ColorDist == "directional"
                 clim(ax2, [-1 1]);
                 cb.Label.String = "Difference: Directional (relative scale)";
-            elseif ColorDist == "robust"
+            elseif options.ColorDist == "robust"
                 clim(ax2, [-2, 2]); % remember to match clipping
             end
         end
@@ -553,32 +648,34 @@ switch strcat(plotType,"_",orientation)
         t = tiledlayout(1, 2, 'TileSpacing', 'compact', 'Padding', 'compact');
 
         ax1 = nexttile;
-        chart = DumbbellChart(X1,X2,YLabels,colors,sz,LineWidth,TextSize, ...
-            TextInside,ColorDist,AxesFontSize,Background);
+        chart = DumbbellChart(X1,X2,options.YLabels,options.Color,options.MarkerSize, ...
+                            options.LineWidth,options.TextSize,options.TextInside, ...
+                            options.ColorDist,options.AxesFontSize,options.Background);
         [h1, h2] = chart.buildVertical(ax1);
         
         ax2 = nexttile;
-        chart2 = DumbbellChart(X3,X4, YLabels,colors,sz,LineWidth,TextSize, ...
-            TextInside,ColorDist,AxesFontSize,Background);
+        chart2 = DumbbellChart(X3,X4,options.YLabels,options.Color,options.MarkerSize, ...
+                            options.LineWidth,options.TextSize,options.TextInside, ...
+                            options.ColorDist,options.AxesFontSize,options.Background);
         [~, ~] = chart2.buildVertical(ax2);
-        legend(ax2, [h1 h2], {labelX1, labelX2}, "Location","best")
+        legend(ax2, [h1 h2], {options.labelX1, options.labelX2}, "Location","best")
         ax2.YAxisLocation= "right";
         ax2.YLabel.String= "";
         
-        title(ax1, Title{1});
-        title(ax2, Title{2});
+        title(ax1, options.Title{1});
+        title(ax2, options.Title{2});
 
-        if ColorDist ~= "false"
+        if options.ColorDist ~= "false"
             colormap(ax1, turbo(256))
             colormap(ax2, turbo(256))
             cb = colorbar(ax2);
             cb.Layout.Tile = 'east';
-            cb.Label.String = "Difference: "+ColorDist;
+            cb.Label.String = "Difference: "+options.ColorDist;
 
-            if ColorDist == "directional"
+            if options.ColorDist == "directional"
                 clim(ax2, [-1 1]);
                 cb.Label.String = "Difference: Directional (relative scale)";
-            elseif ColorDist == "robust"
+            elseif options.ColorDist == "robust"
                 clim(ax2, [-2, 2]); % remember to match clipping value
             end
         end
