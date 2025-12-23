@@ -50,14 +50,14 @@ Recently added features:
 - [x] Option to change the background of the plot to be clearer or more visually appealing
 
 The next additions to the function will be:
-- [ ] Improvement of documentation
-- [ ] restructuring of the repository and README
+- [ ] Analysis of pairs of values in a timeseries
+- [ ] Explore the possibility to create a min max graph for timeseries
+- [ ] Experimentation with MATLAB chart object
+- [ ] Possibility of grouping variables (When grouping is active create interative legends)
 - [ ] Addition of a graph that creates plots for every pair of variables in a table
 - [ ] Add more background options, and custom background colors
 - [ ] Option to add the differences between the points at the side of the plot
 - [ ] Option to add and control weights assigned to dot sizes
-- [ ] Options to display additional information about the data, like 
-    having boxplots on the side to show distribution of the points
 
 Suggestions, feedback, and contributions are welcome and encouraged.
 
@@ -96,5 +96,6 @@ Contributions are always welcome!
 
 # Acknowledgements
 My gratitude goes to Dr. [Domenico Perrotta](https://github.com/DomenicoPerrottaJRC) 
-and professor [Marco Riani](https://github.com/MarcoRianiUNIPR) not only for giving 
-me the idea to write this function, but also for their suggestions, help and support.
+and professor [Marco Riani](https://github.com/MarcoRianiUNIPR), and all the 
+[FSDA team](https://github.com/UniprJRC/FSDA) not only for giving me the idea 
+to write this function, but also for their suggestions, help and support.
