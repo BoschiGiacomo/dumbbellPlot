@@ -1,5 +1,5 @@
 function ax = dumbbellPlot(X, varargin)
-%% dumbbellPlot creates a dumbbell chart comparing two sets of values
+%dumbbellPlot creates a dumbbell chart comparing two sets of values
 %
 %
 %<a href="matlab: docsearchFS('dumbbellPlot')">Link to the help function</a>
@@ -24,7 +24,7 @@ function ax = dumbbellPlot(X, varargin)
 %  Optional input arguments:
 %
 %  orientation  : orientation of the plot. String or char.
-%                 Admissible values are 'horizontal' (default) or 'vertical'
+%                Admissible values are 'horizontal' (default) or 'vertical'
 %               Example - 'Orientation','vertical'
 %               Data Types - string or char
 %
@@ -125,13 +125,15 @@ function ax = dumbbellPlot(X, varargin)
 %
 % References:
 %
+%   Cleveland, W. S. (1984). Graphical Methods for Data Presentation, 
+%   "The American Statistician", Vol. 38, pp. 270–280
 %
 % Copyright 2008-2025.
 % Written by FSDA team
 %
 %
 %
-%<a href="matlab: docsearchFS('waterfallchart')">Link to the help function</a>
+%<a href="matlab: docsearchFS('dumbbellPlot')">Link to the help function</a>
 %
 %$LastChangedDate::                      $: Date of the last commit
 
@@ -165,7 +167,7 @@ function ax = dumbbellPlot(X, varargin)
 %}
 
 %{
-    %% Example of MarkerSize being used to show weights
+    %% Example of MarkerSize being used to show weights.
     products = {'Product A', 'Product B', 'Product C', 'Product D', 'Product E'};
     before_campaign = [65, 45, 78, 52, 88];
     after_campaign = [82, 68, 95, 71, 92];
@@ -183,7 +185,7 @@ function ax = dumbbellPlot(X, varargin)
 %}
 
 %{
-    %% Example of plot with background bands and text inside the dots
+    %% Example of plot with background bands and text inside the dots.
     X1 = [45, 62, 38, 71, 55, 48];
     X2 = [58, 55, 75, 84, 68, 52];
     categories = {'Sales', 'Marketing', 'IT', 'HR', 'Finance', 'Operations'};
@@ -387,9 +389,9 @@ end
 % default value was used.
 options= struct("labelX1", labelX1, ...
                 "labelX2", labelX2, ...
-                "plotType", plotType, ... %initiated at start of fun
+                "plotType", plotType, ... 
                 "Title", "", ...
-                "YLabels", {YLabels}, ...   %initiated during required input validation
+                "YLabels", {YLabels}, ... 
                 "orientation", "horizontal", ...
                 "Color", getColorPalette("default"), ...
                 "MarkerSize", 150.1, ...
@@ -709,3 +711,4 @@ end
         end
     end
 end
+%FScategory:VIS-Mult
