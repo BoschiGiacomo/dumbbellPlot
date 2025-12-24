@@ -1,5 +1,5 @@
 function ax = dumbbellPlot(X, varargin)
-%% dumbbellPlot creates a dumbbell chart comparing two sets of values
+%dumbbellPlot creates a dumbbell chart comparing two sets of values
 %
 %
 %<a href="matlab: docsearchFS('dumbbellPlot')">Link to the help function</a>
@@ -24,7 +24,7 @@ function ax = dumbbellPlot(X, varargin)
 %  Optional input arguments:
 %
 %  orientation  : orientation of the plot. String or char.
-%                 Admissible values are 'horizontal' (default) or 'vertical'
+%                Admissible values are 'horizontal' (default) or 'vertical'
 %               Example - 'Orientation','vertical'
 %               Data Types - string or char
 %
@@ -41,7 +41,7 @@ function ax = dumbbellPlot(X, varargin)
 %               Data Types - char or string
 %
 %   plotType   : Type of plot layout. Char or String.
-%               Determines wheter to create a single plot or a side by side
+%               Determines whether to create a single plot or a side by side
 %               plot. Admissible values are 'single' (default) or 'double'
 %               Example - 'plotType', 'double'
 %               Data Types - char or string
@@ -55,7 +55,7 @@ function ax = dumbbellPlot(X, varargin)
 %
 %   YLabels    : Custom tick labels. string or char or cell array.
 %              Custom labels for each category (row) in the plot. Must have
-%              the same lenght as the number of rows. If not provided,
+%              the same length as the number of rows. If not provided,
 %              default names will be used ('Row 1', 'Row 2',...)
 %              Example - 'YLabels', ["Product A", "Product B", "Product C"]
 %              Data Types - string | char | cell array
@@ -125,13 +125,15 @@ function ax = dumbbellPlot(X, varargin)
 %
 % References:
 %
+%   Cleveland, W. S. (1984). Graphical Methods for Data Presentation, 
+%   "The American Statistician", Vol. 38, pp. 270–280
 %
 % Copyright 2008-2025.
 % Written by FSDA team
 %
 %
 %
-%<a href="matlab: docsearchFS('waterfallchart')">Link to the help function</a>
+%<a href="matlab: docsearchFS('dumbbellPlot')">Link to the help function</a>
 %
 %$LastChangedDate::                      $: Date of the last commit
 
@@ -165,7 +167,7 @@ function ax = dumbbellPlot(X, varargin)
 %}
 
 %{
-    %% Example of MarkerSize being used to show weights
+    %% Example of MarkerSize being used to show weights.
     products = {'Product A', 'Product B', 'Product C', 'Product D', 'Product E'};
     before_campaign = [65, 45, 78, 52, 88];
     after_campaign = [82, 68, 95, 71, 92];
@@ -183,7 +185,7 @@ function ax = dumbbellPlot(X, varargin)
 %}
 
 %{
-    %% Example of plot with background bands and text inside the dots
+    %% Example of plot with background bands and text inside the dots.
     X1 = [45, 62, 38, 71, 55, 48];
     X2 = [58, 55, 75, 84, 68, 52];
     categories = {'Sales', 'Marketing', 'IT', 'HR', 'Finance', 'Operations'};
@@ -209,7 +211,7 @@ if nargin < 1
     error("dumbbellPlot:MissingRequiredInput", "Missing required input argument X")
 end
 
-% check X, it can be vector, or tabel
+% check X, it can be vector, or table
 if istable(X)
     switch width(X)
         case 1
@@ -387,9 +389,9 @@ end
 % default value was used.
 options= struct("labelX1", labelX1, ...
                 "labelX2", labelX2, ...
-                "plotType", plotType, ... %initiated at start of fun
+                "plotType", plotType, ... 
                 "Title", "", ...
-                "YLabels", {YLabels}, ...   %initiated during required input validation
+                "YLabels", {YLabels}, ... 
                 "orientation", "horizontal", ...
                 "Color", getColorPalette("default"), ...
                 "MarkerSize", 150.1, ...
@@ -608,7 +610,7 @@ switch strcat(options.plotType,"_",options.orientation)
         end
 
     case "double_horizontal"
-        t = tiledlayout(2, 1, 'TileSpacing', 'compact', 'Padding', 'compact');
+        tiledlayout(2, 1, 'TileSpacing', 'compact', 'Padding', 'compact');
 
         ax1 = nexttile;
         chart = DumbbellChart(X1,X2,options.YLabels,options.Color,options.MarkerSize, ...
@@ -645,7 +647,7 @@ switch strcat(options.plotType,"_",options.orientation)
         ax = [ax1; ax2];
 
     case "double_vertical"
-        t = tiledlayout(1, 2, 'TileSpacing', 'compact', 'Padding', 'compact');
+        tiledlayout(1, 2, 'TileSpacing', 'compact', 'Padding', 'compact');
 
         ax1 = nexttile;
         chart = DumbbellChart(X1,X2,options.YLabels,options.Color,options.MarkerSize, ...
@@ -709,3 +711,4 @@ end
         end
     end
 end
+%FScategory:VIS-Mult
